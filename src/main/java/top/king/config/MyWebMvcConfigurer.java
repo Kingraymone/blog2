@@ -1,4 +1,4 @@
-package top.king.blog2;
+package top.king.config;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -23,7 +23,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:7778")
+                .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type",
                         "Last-Modified", "device", "token")

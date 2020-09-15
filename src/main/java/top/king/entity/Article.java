@@ -3,7 +3,7 @@ package top.king.entity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Data
 public class Article implements Serializable, Cloneable {
@@ -22,7 +22,7 @@ public class Article implements Serializable, Cloneable {
     /**
      * createDate;发布时间
      */
-    private Date createdate;
+    private Timestamp createTime;
     /**
      * tag_id;标签
      */
@@ -46,7 +46,7 @@ public class Article implements Serializable, Cloneable {
     /**
      * keyWord;关键词
      */
-    private String keyword;
+    private String keyWord;
     /**
      * user_id;用户id
      */

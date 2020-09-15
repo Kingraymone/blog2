@@ -3,6 +3,7 @@ package top.king.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,7 +27,7 @@ public class User implements Serializable, Cloneable {
     /**
      * 头像
      */
-    private String imageName;
+    private String avatar;
     /**
      * 座右铭
      */
@@ -34,7 +35,7 @@ public class User implements Serializable, Cloneable {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Timestamp createTime;
     /**
      * 邮箱
      */

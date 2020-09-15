@@ -1,18 +1,13 @@
-package top.king.blog2;
+package top.king.config;
 
-import jdk.nashorn.internal.objects.annotations.Setter;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Component
 @ConfigurationProperties("test")
