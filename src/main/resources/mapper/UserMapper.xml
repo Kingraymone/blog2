@@ -3,18 +3,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.king.mapper.UserMapper">
     <resultMap id="BaseResultMap" type="top.king.entity.User">
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="user_id" jdbcType="INTEGER" property="uniqueId"/>
+        <result column="create_time" jdbcType="INTEGER" property="createTime"/>
     </resultMap>
     <select id="selectUsers" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
-        select t.*
+        select
+               user_id,
+               username,
+               nickname,
+               avatar,
+               motto,
+               DATE_FORMAT(t.create_time,'%Y%m%d') create_time,
+               mail,
+               status
         from t_user t
         <where>
-            <if test='data.username!=null'>
+            <if test='data.username!=null and data.username!=""'>
                 and t.username=#{data.username}
             </if>
-            <if test='data.status!=null'>
-                and t.status=#{data.status}
+            <if test='data.status!=null and data.status.size()>0'>
+                and t.status in
+                <foreach item="item" collection="data.status" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test='data.createTime!=null'>
                 and DATE_FORMAT(t.create_time,'%Y%m%d')=#{data.createTime}
@@ -23,15 +34,27 @@
     </select>
 
     <select id="verifyUser" parameterType="top.king.entity.User" resultMap="BaseResultMap">
-        select t.*
+        select
+               user_id,
+               username,
+               password,
+               nickname,
+               avatar,
+               motto,
+               DATE_FORMAT(t.create_time,'%Y%m%d'),
+               mail,
+               status
         from t_user t
         where username = #{username}
           and password = #{password}
     </select>
-    <delete id="deleteUser" parameterType="java.lang.String">
+    <delete id="deleteUser" parameterType="java.util.List">
         delete
         from t_user
-        where user_id = #{primaryKey}
+        where user_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
     <insert id="insertUser" parameterType="top.king.entity.User">
         insert into t_user(username, password, nickname, avatar, motto, create_time, mail, status)
@@ -66,6 +89,6 @@
             </if>
         </set>
         where
-        user_id = #{userId}
+        user_id = #{uniqueId}
     </update>
 </mapper>

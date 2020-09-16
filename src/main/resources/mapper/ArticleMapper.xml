@@ -4,6 +4,7 @@
 <mapper namespace="top.king.mapper.ArticleMapper">
     <resultMap id="BaseResultMap" type="top.king.entity.Article">
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="id" jdbcType="INTEGER" property="uniqueId"/>
         <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
         <result column="type_id" jdbcType="INTEGER" property="typeId"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -12,20 +13,23 @@
         select t.*
         from t_blog t
         <where>
-            <if test='data.title!=null'>
+            <if test='data.title!=null and data.title!=""'>
                 and t.title like CONCAT('%', #{data.title}, '%')
             </if>
-            <if test='data.summary!=null'>
+            <if test='data.summary!=null and data.summary!=""'>
                 and t.summary like CONCAT('%', #{data.summary}, '%')
             </if>
             <if test='data.createTime!=null'>
                 and DATE_FORMAT(t.create_time,'%Y%m%d')=#{data.createTime}
             </if>
             <if test='data.tagId!=null'>
-                and t.tagId=#{data.tagId}
+                and t.tag_Id=#{data.tagId}
             </if>
             <if test='data.typeId!=null'>
-                and t.typeId=#{data.typeId}
+                and t.type_Id=#{data.typeId}
+            </if>
+            <if test='data.userId!=null'>
+                and t.user_id=#{data.userId}
             </if>
         </where>
     </select>
@@ -36,9 +40,12 @@
         where t.id = #{id}
     </select>
     <delete id="deleteArticle" parameterType="java.lang.String">
-        delete
-        from t_blog
-        where t.id = #{primaryKey}
+        delete t
+        from t_blog t
+        where t.id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
     </delete>
     <insert id="insertArticle" parameterType="top.king.entity.Article">
         insert  into t_blog(title,summary,create_time,tag_id,type_id,content,click,comment,keyWord,user_id)
@@ -68,6 +75,6 @@
             </if>
         </set>
         where
-        id = #{id}
+        id = #{uniqueId}
     </update>
 </mapper>

@@ -9,7 +9,7 @@ import java.util.List;
 public interface ArticleMapper {
     List<Article> selectArticles(BaseQuery<ArticleSearchDTO> param);
 
-    void deleteArticle(String primaryKey);
+    void deleteArticle(List<String> primaryKey);
 
     void insertArticle(Article article);
 

@@ -11,7 +11,7 @@ public class User implements Serializable, Cloneable {
     /**
      * 用户id
      */
-    private Integer userId;
+    private Integer uniqueId;
     /**
      * 用户名
      */
@@ -35,7 +35,7 @@ public class User implements Serializable, Cloneable {
     /**
      * 创建时间
      */
-    private Timestamp createTime;
+    private Integer createTime;
     /**
      * 邮箱
      */

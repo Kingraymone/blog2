@@ -3,6 +3,7 @@ package top.king.entity.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class ArticleSearchDTO implements Serializable {
@@ -11,4 +12,6 @@ public class ArticleSearchDTO implements Serializable {
     private Integer createTime;
     private String tagId;
     private String typeId;
+    private String userId;
+    List<String> primaryKey;
 }

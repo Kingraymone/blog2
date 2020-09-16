@@ -14,7 +14,7 @@ public interface UserService {
 
     ResultModel updateUser(User user);
 
-    ResultModel deleteUser(String primaryKey);
+    ResultModel deleteUser(List<String> primaryKey);
 
     ResultModel<Boolean> verifyUser(User user);
 }

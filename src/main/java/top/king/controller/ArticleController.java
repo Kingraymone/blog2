@@ -29,8 +29,8 @@ public class ArticleController {
     }
 
     @RequestMapping("/delete")
-    public ResultModel deleteArticle(String primaryKey) {
-        return articleService.deleteArticle(primaryKey);
+    public ResultModel deleteArticle(@RequestBody ArticleSearchDTO articleSearchDTO) {
+        return articleService.deleteArticle(articleSearchDTO.getPrimaryKey());
     }
 
     @RequestMapping("/update")
@@ -39,7 +39,7 @@ public class ArticleController {
     }
 
     @RequestMapping("/id")
-    public ResultModel<Article> verifyUser(String primaryKey) {
+    public ResultModel<Article> selectArticle(String primaryKey) {
         return articleService.selectArticle(primaryKey);
     }
 }

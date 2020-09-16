@@ -66,7 +66,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public ResultModel deleteUser(String primaryKey) {
+    public ResultModel deleteUser(List<String> primaryKey) {
         ResultModel resultModel = new ResultModel();
         try {
             userMapper.deleteUser(primaryKey);

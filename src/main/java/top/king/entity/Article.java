@@ -10,7 +10,7 @@ public class Article implements Serializable, Cloneable {
     /**
      * id;博客编号
      */
-    private Integer id;
+    private Integer uniqueId;
     /**
      * title;博客标题
      */
@@ -44,7 +44,7 @@ public class Article implements Serializable, Cloneable {
      */
     private Integer comment;
     /**
-     * keyWord;关键词
+     * keyWord;关键词 保存 0  发表 1
      */
     private String keyWord;
     /**

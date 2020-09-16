@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @RequestMapping("/delete")
-    public ResultModel deleteUser(String primaryKey) {
-        return userService.deleteUser(primaryKey);
+    public ResultModel deleteUser(@RequestBody UserSearchDTO userSearchDTO) {
+        return userService.deleteUser(userSearchDTO.getPrimaryKey());
     }
 
     @RequestMapping("/update")

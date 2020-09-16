@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserMapper {
     List<User> selectUsers(BaseQuery<UserSearchDTO> param);
 
-    void deleteUser(String primaryKey);
+    void deleteUser(List<String> primaryKey);
 
     void insertUser(User user);
 

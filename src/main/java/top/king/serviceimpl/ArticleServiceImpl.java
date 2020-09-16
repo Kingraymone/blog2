@@ -65,7 +65,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
     }
 
     @Override
-    public ResultModel deleteArticle(String primaryKey) {
+    public ResultModel deleteArticle(List<String> primaryKey) {
         ResultModel resultModel = new ResultModel();
         try {
             articleMapper.deleteArticle(primaryKey);

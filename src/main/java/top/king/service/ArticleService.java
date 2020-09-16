@@ -14,7 +14,7 @@ public interface ArticleService {
 
     ResultModel updateArticle(Article article);
 
-    ResultModel deleteArticle(String primaryKey);
+    ResultModel deleteArticle(List<String> primaryKey);
     
     ResultModel<Article> selectArticle(String primaryKey);
 
