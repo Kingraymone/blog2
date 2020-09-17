@@ -3,7 +3,7 @@ package top.king.serviceimpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import top.king.common.BaseQuery;
 import top.king.common.BaseService;
 import top.king.common.ResultModel;
@@ -14,7 +14,7 @@ import top.king.service.ArticleService;
 
 import java.util.List;
 
-@Component
+@Service
 public class ArticleServiceImpl extends BaseService implements ArticleService {
     @Autowired
     ArticleMapper articleMapper;

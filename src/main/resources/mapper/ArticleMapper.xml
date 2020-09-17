@@ -10,7 +10,17 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
     <select id="selectArticles" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
-        select t.*
+        select
+               id,
+               title,
+               summary,
+               create_time,
+               tag_id,
+               type_id,
+               click,
+               SUBSTRING(content,1,20) content,
+               keyWord,
+               user_id
         from t_blog t
         <where>
             <if test='data.title!=null and data.title!=""'>
@@ -21,6 +31,12 @@
             </if>
             <if test='data.createTime!=null'>
                 and DATE_FORMAT(t.create_time,'%Y%m%d')=#{data.createTime}
+            </if>
+            <if test='data.keyWord!=null and data.keyWord.size()>0'>
+                and t.keyWord in
+                <foreach item="item" collection="data.keyWord" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test='data.tagId!=null'>
                 and t.tag_Id=#{data.tagId}

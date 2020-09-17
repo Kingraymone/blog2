@@ -14,4 +14,5 @@ public class ArticleSearchDTO implements Serializable {
     private String typeId;
     private String userId;
     List<String> primaryKey;
+    List<String> keyWord;
 }
