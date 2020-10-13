@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-menu class="el-menu-vertical-cur"
+    <el-menu class="el-menu-vertical"
              :collapse="$store.state.isCollapse"
              background-color="#324157"
              text-color="#bfcbd9"
@@ -77,7 +77,7 @@
                                 title: '文章列表'
                             },
                             {
-                                index: '/sys/home/article/publish',
+                                index: '/sys/home/article/publish/add',
                                 title: '发表文章'
                             }
                         ]
@@ -168,5 +168,7 @@
 </script>
 
 <style scoped>
-
+  .el-menu-vertical:not(.el-menu--collapse) {
+    width: 222px;
+  }
 </style>

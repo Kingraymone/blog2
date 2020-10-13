@@ -1,35 +1,32 @@
-import Vue from 'vue'
-import ElementUI from 'element-ui'
+import {Message} from 'element-ui';
 
-
-
-Vue.prototype.$message.success = function (msg) {
-  return ElementUI.Message.success({
-    message: msg,
-    duration: 1000,
-    center:true
-  })
-};
-Vue.prototype.$message.warning = function (msg) {
-  return ElementUI.Message.warning({
-    message: msg,
-    duration: 1000,
-    center:true
-  })
-};
-Vue.prototype.$message.info = function (msg) {
-  return ElementUI.Message.info({
-    message: msg,
-    duration: 1000,
-    center:true
-  })
-};
-Vue.prototype.$message.error = function (msg) {
-  return ElementUI.Message.error({
-    message: msg,
-    duration: 1000,
-    center:true
-  })
-};
+export default {
+  // 复制属性
+  copyProperty(newP, oldP) {
+    for (let key in newP) {
+      newP[key] = oldP[key];
+    }
+  },
+  // 日期格式函数 20100101 ->> 2010-01-01
+  dateFormat(row, column, cellValue, index) {
+    if (!!cellValue) {
+      if (!isNaN(cellValue)) {
+        cellValue = cellValue + '';
+        cellValue = cellValue.substring(0, 4) + "-" + cellValue.substring(4, 6) + "-" + cellValue.substring(6, 8);
+      }
+    }
+    return cellValue;
+  },
+  // 全局消息提示方法
+  kMessage(msg, type) {
+    Message.closeAll();
+    Message({
+      message: msg,
+      center: true,
+      type: type,
+      duration: 1000
+    });
+  }
+}
 
 

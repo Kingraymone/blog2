@@ -26,6 +26,8 @@
                   v-model="searchTab.createTime"
                   type="date"
                   size="small"
+                  format="yyyy-MM-dd"
+                  value-format="yyyyMMdd"
                   placeholder="选择日期">
                 </el-date-picker>
               </el-form-item>
@@ -54,15 +56,15 @@
       <el-row type="flex">
         <el-button-group>
           <el-tooltip class="item" content="新增">
-            <el-button icon="el-icon-plus" @click="userAdd"></el-button>
+            <el-button type="primary" icon="el-icon-plus" @click="handleAdd"></el-button>
           </el-tooltip>
           <el-tooltip class="item" content="修改">
-            <el-button icon="el-icon-edit" @click="userEdit"></el-button>
+            <el-button type="info" icon="el-icon-edit" @click="handleEdit"></el-button>
           </el-tooltip>
           <el-tooltip class="item" content="删除">
-            <el-button icon="el-icon-delete" @click="deleteUser"></el-button>
+            <el-button type="danger" icon="el-icon-delete" @click="handleDelete"></el-button>
           </el-tooltip>
-          <el-button @click="iconUpload">头像上传<i class="el-icon-upload el-icon--right"></i></el-button>
+          <el-button type="primary" @click="iconUpload">头像上传<i class="el-icon-upload el-icon--right"></i></el-button>
         </el-button-group>
       </el-row>
       <!--表格-->
@@ -77,7 +79,7 @@
             :cell-style="{ textAlign: 'center' }"
             :default-sort="{prop: 'createTime', order: 'descending'}"
             tooltip-effect="dark"
-            style="width: 100%"
+            style="width: 100%;min-height: 300px"
             @selection-change="handleSelectionChange">
             <template v-for="(item,index) in tcolumn">
               <el-table-column
@@ -86,22 +88,24 @@
                 :type="item.type"
                 :prop="item.prop"
                 :sortable="item.sort"
+                :formatter="item.format"
               ></el-table-column>
             </template>
-
           </el-table>
         </el-col>
       </el-row>
-      <!--页面导航-->
+      <!--分页-->
       <el-row type="flex" style="height: 40px">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <div style="text-align: right">
             <el-pagination
               background
-              :page-size="20"
-              :pager-count="10"
-              layout="total, sizes,prev, pager, next,jumper"
-              :total="2000">
+              :total="total"
+              :page-size="pageSize"
+              :current-page="currentPage"
+              layout="total,prev, pager, next,jumper"
+              @current-change="pageChange"
+            >
             </el-pagination>
           </div>
         </el-col>
@@ -198,15 +202,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="4">
-              <el-form-item label="状态" prop="status">
-                <el-select
-                  v-model="editForm.status"
-                  clearable
-                  placeholder="请选择">
-                  <el-option label="正常" value="0"></el-option>
-                  <el-option label="冻结" value="1"></el-option>
-                </el-select>
-              </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select
+                v-model="editForm.status"
+                clearable
+                placeholder="请选择">
+                <el-option label="正常" value="0"></el-option>
+                <el-option label="冻结" value="1"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -250,6 +254,7 @@
                     mail: ''
                 },
                 editForm: {
+                    uniqueId: '',
                     username: '',
                     password: '',
                     nickname: '',
@@ -272,9 +277,9 @@
                 searchTab: {
                     username: '',
                     createTime: '',
-                    status: ''
+                    status: []
                 },
-                tableData: Array(1).fill(item).concat(Array(1).fill(item2)),
+                tableData: [],
                 tcolumn: [
                     {
                         label: '',
@@ -315,36 +320,61 @@
                         width: '',
                         type: '',
                         sort: true,
-                        prop: 'createTime'
+                        prop: 'createTime',
+                        format: this.commons.dateFormat
                     }
                 ],
-                rowSelections: []
+                rowSelections: [],
+                total: 0,
+                pageSize: 10,
+                currentPage: 1
             }
         },
+        /*created() {
+            this.selectData();
+        },*/
         methods: {
-            kMessage(msg,type){
-                this.$message.closeAll();
-                this.$message({
-                    message: msg,
-                    center: true,
-                    type:type,
-                    duration:1000
-                });
+            selectData() {
+                let data = this.searchTab;
+                let searchParam = {
+                    "pageSize": this.pageSize,
+                    "pageNum": this.currentPage,
+                    "data": data
+                };
+                let _this = this;
+                _this.$axios.post('/user/search', searchParam)
+                    .then(function (response) {
+                        _this.tableData = response.data;
+                        _this.total = response.count
+                    })
+                    .catch(function (error) {
+
+                    });
             },
-            copyProperty(newP,oldP){
-                for(let key in newP) {
-                    newP[key] = oldP[key];
-                }
+            pageChange(val) {
+                // 当前页改变，重新查询
+                this.currentPage = val;
+                this.selectData();
+                console.info(val);
             },
             handleSelectionChange(val) {
                 this.rowSelections = val;
             },
-            userAdd() {
+            handleAdd() {
                 this.addVisible = true;
             },
             addSubmitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        let _this = this;
+                        this.$axios.post("/user/add",this.addForm)
+                            .then(function(response){
+                                _this.commons.kMessage("新增用户成功！", 'success');
+                                _this.selectData();
+                            })
+                            .catch(function(error){
+                                _this.commons.kMessage(error, 'error');
+                            });
                         this.addVisible = false;
                         return true;
                     } else {
@@ -354,18 +384,27 @@
                 });
             },
 
-            userEdit() {
+            handleEdit() {
                 if (this.rowSelections.length !== 1) {
-                    this.kMessage("请选择一条数据！",'info');
+                    this.commons.kMessage("请选择一条数据！", 'info');
                 } else {
-                    this.copyProperty(this.editForm,this.rowSelections[0]);
+                    this.commons.copyProperty(this.editForm, this.rowSelections[0]);
                     this.editVisible = true;
                 }
             },
             editSubmitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.addVisible = false;
+                        let _this = this;
+                        this.$axios.post("/user/update",this.editForm)
+                            .then(function(response){
+                                _this.commons.kMessage("修改用户成功！", 'success');
+                                _this.selectData();
+                            })
+                            .catch(function(error){
+                                _this.commons.kMessage(error, 'error');
+                            });
+                        this.editVisible = false;
                         return true;
                     } else {
                         console.log('error submit!!');
@@ -374,26 +413,44 @@
                 });
             },
 
-            deleteUser(){
-                if (this.rowSelections.length !== 1) {
-                    this.kMessage("请选择一条数据！",'info');
+            handleDelete() {
+                if (this.rowSelections.length < 1) {
+                    this.commons.kMessage("请选择至少一条数据！", 'info');
                 } else {
-
+                  let primaryKey = [];
+                  this.rowSelections.forEach(function(item){
+                      primaryKey.push(item.uniqueId);
+                  });
+                    let _this = this;
+                    this.$axios.post("/user/delete", { primaryKey})
+                        .then(function (response) {
+                            _this.commons.kMessage("删除用户成功！", 'success');
+                            _this.currentPage = 1;
+                            _this.selectData();
+                        })
+                        .catch(function (error) {
+                            _this.commons.kMessage(error, 'error');
+                        });
                 }
             },
 
-            iconUpload(){
+            iconUpload() {
                 if (this.rowSelections.length !== 1) {
-                    this.kMessage("请选择一条数据！",'info');
+                    this.commons.kMessage("请选择一条数据！", 'info');
                 } else {
 
                 }
             },
             resetForm() {
-                this.searchTab = {};
+                this.searchTab = {
+                    username: '',
+                    createTime: '',
+                    status: []
+                };
             },
             onQuery() {
-                console.log('submit!');
+                this.currentPage=1;
+                this.selectData();
             }
         }
     }

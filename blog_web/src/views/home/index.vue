@@ -9,7 +9,10 @@
         <TabNav></TabNav>
         <el-scrollbar style="height:100%">
           <div class="content">
-            <router-view></router-view>
+            <keep-alive>
+              <router-view ref="baseContent" v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+            <router-view ref="baseContent" v-if="!$route.meta.keepAlive"></router-view>
           </div>
         </el-scrollbar>
       </el-container>
@@ -18,7 +21,6 @@
 </template>
 <style scoped>
   .content {
-    width: auto;
     padding: 10px;
   }
 </style>

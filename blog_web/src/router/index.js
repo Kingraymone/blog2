@@ -13,7 +13,7 @@ export default new Router({
     {
       path: '/',
       name: 'blog',
-      redirect:'/blog'
+      component: () => import("@/views/blog/Index.vue")
     },
     {
       path:'/blog',
@@ -38,22 +38,27 @@ export default new Router({
         {
           path: '',
           component: () => import('@/views/home/Home.vue'),
-          meta: { title: '系统首页' }
+          meta: { title: '系统首页',keepAlive:true }
         },
         {
           path: 'user',
           component: () => import('@/views/home/User.vue'),
-          meta: { title: '用户管理' }
+          meta: { title: '用户管理',keepAlive:true }
         },
         {
-          path: 'article/publish',
+          path: 'article/publish/:id',
           component: () => import('@/views/home/article/Publish.vue'),
           meta: { title: '发表文章' }
         },
         {
           path: 'article/list',
           component: () => import('@/views/home/article/List.vue'),
-          meta: { title: '文章列表' }
+          meta: { title: '文章列表',keepAlive:true }
+        },
+        {
+          path: 'article/detail/:id',
+          component: () => import('@/views/home/article/Detail.vue'),
+          meta: { title: '文章详情'}
         }
 
         ]

@@ -56,33 +56,31 @@
                     this.pwdtype = "password";
                 }
             },
+            parseResponse(response){
+              let token=response.headers.authorization;
+              this.$store.commit('addToken',token);
+              this.$store.commit('addUserInfo',response.data.data);
+            },
             submitForm() {
                 this.$refs.login.validate(valid => {
                     let _this = this;
                     if (valid) {
-                        _this.$router.push('/home');
+                        //_this.$router.push('/sys/home');
                         // 登陆后台校验  /login
                         // 存在token直接成功
-                        /*this.$axios.post('/login', {
+                        this.$axios.post('/user/verify', {
                             username: this.param.username,
                             password: this.param.password
                         })
                             .then(function (response) {
-                                if(response.data.result) {
-                                    _this.$message.success('登录成功');
-                                    localStorage.setItem('ms_username', _this.param.username);
-                                    _this.$router.push('/home');
-                                }else{
-                                    _this.$message.error('用户名密码错误！');
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });*/
+                                _this.commons.kMessage('登录成功!', 'success');
+                                // response解析
+                                _this.parseResponse(response);
+                                _this.$router.push('/sys/home');
+                            }).catch(err => {
 
+                            })
                     } else {
-                        this.$message.error('请输入账号和密码');
-                        console.log('error submit!!');
                         return false;
                     }
                 });

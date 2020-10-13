@@ -17,4 +17,6 @@ public interface UserMapper {
     void updateUser(User user);
 
     User verifyUser(User user);
+
+    User loadUserInfo(String user);
 }

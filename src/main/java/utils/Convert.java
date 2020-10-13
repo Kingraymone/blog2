@@ -66,7 +66,7 @@ public class Convert {
             return new String(buffer);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 }

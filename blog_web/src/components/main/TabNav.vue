@@ -55,13 +55,13 @@
                 if (item) {
                     delItem.path === this.$route.fullPath && this.$router.push(item.path);
                 }else{
-                    this.$router.push('/home');
+                    this.$router.push('/sys/home');
                 }
             },
             handleTags(command){
                 if(command==='all') {
                     this.tagsList = [];
-                    this.$router.push('/home');
+                    this.$router.push('/sys/home');
                 }else{
                     const curItem = this.tagsList.filter(item => {
                         return item.path === this.$route.fullPath;

@@ -17,4 +17,6 @@ public interface UserService {
     ResultModel deleteUser(List<String> primaryKey);
 
     ResultModel<Boolean> verifyUser(User user);
+
+    User loadUserInfo(String username);
 }

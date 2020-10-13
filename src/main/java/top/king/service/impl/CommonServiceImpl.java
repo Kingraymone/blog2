@@ -1,4 +1,4 @@
-package top.king.serviceimpl;
+package top.king.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

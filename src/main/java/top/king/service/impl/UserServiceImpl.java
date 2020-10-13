@@ -1,4 +1,4 @@
-package top.king.serviceimpl;
+package top.king.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -96,5 +96,16 @@ public class UserServiceImpl extends BaseService implements UserService {
             resultModel.setResult(Boolean.FALSE);
             return resultModel;
         }
+    }
+
+    @Override
+    public User loadUserInfo(String username) {
+        User user = null;
+        try {
+            user = userMapper.loadUserInfo(username);
+        } catch (Exception e) {
+            bLogger.debug("加载用户信息出错！", e);
+        }
+        return user;
     }
 }

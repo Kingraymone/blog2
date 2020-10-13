@@ -62,7 +62,7 @@
             handleCommand(command){
                 if(command==='logout'){
                     // 清除token、锁屏等
-                    this.$router.push("/");
+                    this.$router.push("/sys");
                 }
             }
         }
