@@ -80,7 +80,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
         SecurityContextHolder.getContext().setAuthentication(authResult);
         JwtUser jwtUser = (JwtUser) authResult.getPrincipal();
         // 获得令牌
-        String token = JwtTokenUtil.generateToken(jwtUser.getUser());
+        String token = JwtTokenUtil.generateToken(jwtUser);
         response.setHeader("Authorization", token);
         ResultModel resultModel = new ResultModel(true);
         resultModel.setData(jwtUser.getUser());

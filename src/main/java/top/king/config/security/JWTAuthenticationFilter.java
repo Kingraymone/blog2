@@ -1,10 +1,19 @@
 package top.king.config.security;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import utils.Convert;
 import utils.JwtTokenUtil;
 import utils.StringUtils;
 
@@ -13,6 +22,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -23,6 +36,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
  * @package top.king.config.security
  * @date 2020-10-13
  */
+@Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,6 +46,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         if (ObjectUtils.isEmpty(token)) {
             filterChain.doFilter(request, response);
         }
+        SecurityContextHolder.getContext().setAuthentication(token);
+        filterChain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken createToken(HttpServletRequest request) {
@@ -48,7 +64,21 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private UsernamePasswordAuthenticationToken createAuthentication(String token) {
-        return new UsernamePasswordAuthenticationToken("king", "123456");
+        try {
+            Jws<Claims> claimsJws = JwtTokenUtil.parseToken(token);
+            assert claimsJws != null;
+            Claims body = claimsJws.getBody();
+            String uniqueId = Convert.hex2Str((String) body.get(Convert.str2Hex("uniqueId")));
+            // 权限信息转换，后续根据uniqueId从redis中获取
+            Set<Map> maps = new ObjectMapper().readValue(Convert.hex2Str((String) body.get(Convert.str2Hex("authorities"))), Set.class);
+            List<SimpleGrantedAuthority> authorities = maps.stream().map((map) -> new SimpleGrantedAuthority("ROLE_" + map.get("authority"))).collect(Collectors.toList());
+            // 测试中，只验证权限
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("king", "123456", authorities);
+            return usernamePasswordAuthenticationToken;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

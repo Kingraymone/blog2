@@ -1,8 +1,12 @@
 package utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
+import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import top.king.config.security.JwtUser;
 import top.king.entity.User;
 
 import java.security.Key;
@@ -33,21 +37,28 @@ public class JwtTokenUtil {
     }
 
     // 生成jwt令牌
-    public static String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>(4);
-        // 对内容简单编码
-        claims.put(Convert.str2Hex("nickname"), Convert.str2Hex(StringUtils.isEmpty(user.getNickname()) ? user.getUsername() : user.getNickname()));
-        claims.put(Convert.str2Hex("expire"), Convert.str2Hex(String.valueOf(Instant.now().toEpochMilli() + expire)));
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, loadKey()).compact();
+    public static String generateToken(JwtUser jwtUser) {
+        try {
+            User user = jwtUser.getUser();
+            Map<String, Object> claims = new HashMap<>(4);
+            // 对内容简单编码
+            claims.put(Convert.str2Hex("uniqueId"), Convert.str2Hex(user.getUniqueId().toString()));
+            claims.put(Convert.str2Hex("authorities"), Convert.str2Hex(new ObjectMapper().writeValueAsString(jwtUser.getAuthorities())));
+            claims.put(Convert.str2Hex("expire"), Convert.str2Hex(String.valueOf(Instant.now().toEpochMilli() + expire)));
+            return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, loadKey()).compact();
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 
     // 解析令牌
-    public static Jws<Claims> parseToken(String token) throws Exception {
+    public static Jws<Claims> parseToken(String token) {
         Jws<Claims> claimsJws;
         try {
             claimsJws = Jwts.parser().setSigningKey(loadKey()).parseClaimsJws(token);
         } catch (Exception e) {
-            throw new Exception("解析token失败！");
+            e.printStackTrace();
+            return null;
         }
         return claimsJws;
     }

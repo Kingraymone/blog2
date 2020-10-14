@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,6 +47,8 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
         loginFilter.setAuthenticationManager(authenticationManager());
         // 添加过滤器
         http.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        // jwt请求过滤器
+        http.addFilterBefore(new JWTAuthenticationFilter(), FilterSecurityInterceptor.class);
     }
 
     /**
