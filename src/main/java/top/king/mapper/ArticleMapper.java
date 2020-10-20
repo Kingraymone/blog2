@@ -16,4 +16,10 @@ public interface ArticleMapper {
     void updateArticle(Article article);
 
     Article selectArticleById(String primaryKey);
+
+    List<Article> selectAllArticles();
+
+    List<Article> selectBySearch(String key);
+
+    int updateAppreciate(String primaryKey);
 }

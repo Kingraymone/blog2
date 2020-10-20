@@ -92,4 +92,51 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
             return resultModel;
         }
     }
+
+    @Override
+    public ResultModel<List<Article>> selectAllArticles() {
+        ResultModel<List<Article>> resultModel = new ResultModel<>();
+        try {
+            List<Article> articles = articleMapper.selectAllArticles();
+            resultModel.setData(articles);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询文章信息出错！", e);
+            resultModel.setMsg("查询文章信息出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
+    public ResultModel<List<Article>> selectBySearch(String key) {
+        ResultModel<List<Article>> resultModel = new ResultModel<>();
+        try {
+            List<Article> articles = articleMapper.selectBySearch(key);
+            resultModel.setData(articles);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询文章信息出错！", e);
+            resultModel.setMsg("查询文章信息出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
+    public ResultModel updateAppreciate(String key) {
+        ResultModel resultModel = new ResultModel();
+        try {
+            int i = articleMapper.updateAppreciate(key);
+            if(i==0){
+                resultModel.setCode("-1");
+            }
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("添加点赞数据出错！", e);
+            resultModel.setMsg("添加点赞数据出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
 }

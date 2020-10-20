@@ -18,9 +18,11 @@
                tag_id,
                type_id,
                click,
-               SUBSTRING(content,1,20) content,
+               SUBSTRING(content,1,50) content,
                keyWord,
-               user_id
+               user_id,
+               appreciate,
+               comment
         from t_blog t
         <where>
             <if test='data.title!=null and data.title!=""'>
@@ -48,12 +50,47 @@
                 and t.user_id=#{data.userId}
             </if>
         </where>
+        order by create_time desc
+    </select>
+    <select id="selectAllArticles" resultMap="BaseResultMap">
+        select
+            id,
+            title,
+            summary,
+            create_time,
+            tag_id,
+            type_id,
+            click,
+            keyWord,
+            user_id,
+            appreciate,
+            comment
+        from t_blog t
+        order by create_time desc
     </select>
 
     <select id="selectArticleById" parameterType="java.lang.String" resultMap="BaseResultMap">
         select t.*
         from t_blog t
         where t.id = #{id}
+    </select>
+    <select id="selectBySearch" parameterType="java.lang.String" resultType="top.king.entity.Article">
+        select
+            id as uniqueId,
+            title,
+            summary,
+            create_time as createTime,
+            tag_id,
+            type_id,
+            click,
+            keyWord,
+            user_id,
+            appreciate,
+            comment
+        from t_blog t
+        where title like concat('%',#{key},'%') or summary like concat('%',#{key},'%')
+            and t.keyWord = 1
+        order by create_time desc
     </select>
     <delete id="deleteArticle" parameterType="java.lang.String">
         delete t
@@ -93,4 +130,11 @@
         where
         id = #{uniqueId}
     </update>
+    <update id="updateAppreciate" parameterType="java.lang.String">
+        update t_blog
+        set appreciate=appreciate+1
+        where id=#{primaryKey}
+    </update>
+
+
 </mapper>

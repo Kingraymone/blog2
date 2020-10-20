@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -14,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -39,8 +41,9 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 跨域支持
         http.cors();
         // 统一异常处理+访问权限控制
-        http.exceptionHandling().and().authorizeRequests().antMatchers("/article/**").authenticated()
-        .antMatchers("/user/**").hasRole("SYSTEM");
+        http.exceptionHandling().and()
+                .authorizeRequests()
+                .antMatchers("/user/**").hasRole("SYSTEM");
         // 登陆过滤器
         JwtLoginFilter loginFilter = new JwtLoginFilter();
         // 设置身份管理验证器

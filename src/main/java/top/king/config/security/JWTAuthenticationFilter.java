@@ -36,7 +36,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
  * @package top.king.config.security
  * @date 2020-10-13
  */
-@Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,14 +44,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         // 如果不存在令牌则跳过当前过滤器
         if (ObjectUtils.isEmpty(token)) {
             filterChain.doFilter(request, response);
+        }else{
+            SecurityContextHolder.getContext().setAuthentication(token);
+            filterChain.doFilter(request, response);
         }
-        SecurityContextHolder.getContext().setAuthentication(token);
-        filterChain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken createToken(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION);
-        if (StringUtils.isEmpty(header.trim())) {
+        if (StringUtils.isEmpty(header)) {
             return null;
         }
         // 存在Authorization头则进行验证，失败则抛出异常

@@ -93,10 +93,10 @@ public class JwtTokenUtil {
             Jws<Claims> claimsJws = parseToken(token);
             Claims body = claimsJws.getBody();
             String verifyToken = Jwts.builder().setClaims(body).signWith(SignatureAlgorithm.HS256, loadKey()).compact();
-            boolean isModify = verifyToken.equals(token);
+            boolean notModify = verifyToken.equals(token);
             // 校验用户是否存在
             // 校验是否到期
-            return isModify && verityExpire(token);
+            return notModify && verityExpire(token);
         } catch (Exception e) {
             return false;
         }

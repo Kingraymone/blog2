@@ -18,4 +18,9 @@ public interface ArticleService {
     
     ResultModel<Article> selectArticle(String primaryKey);
 
+    ResultModel<List<Article>> selectAllArticles();
+
+    ResultModel<List<Article>> selectBySearch(String key);
+
+    ResultModel updateAppreciate(String key);
 }

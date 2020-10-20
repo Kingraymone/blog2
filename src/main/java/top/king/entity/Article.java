@@ -51,4 +51,8 @@ public class Article implements Serializable, Cloneable {
      * user_id;用户id
      */
     private Integer userId;
+    /**
+     * appreciate;点赞数
+     */
+    private Integer appreciate;
 }
