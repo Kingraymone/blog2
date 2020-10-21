@@ -43,6 +43,7 @@ public class JwtTokenUtil {
             Map<String, Object> claims = new HashMap<>(4);
             // 对内容简单编码
             claims.put(Convert.str2Hex("uniqueId"), Convert.str2Hex(user.getUniqueId().toString()));
+            claims.put(Convert.str2Hex("username"), Convert.str2Hex(user.getUsername()));
             claims.put(Convert.str2Hex("authorities"), Convert.str2Hex(new ObjectMapper().writeValueAsString(jwtUser.getAuthorities())));
             claims.put(Convert.str2Hex("expire"), Convert.str2Hex(String.valueOf(Instant.now().toEpochMilli() + expire)));
             return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256, loadKey()).compact();

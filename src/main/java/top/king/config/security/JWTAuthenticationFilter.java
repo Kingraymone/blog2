@@ -69,11 +69,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             assert claimsJws != null;
             Claims body = claimsJws.getBody();
             String uniqueId = Convert.hex2Str((String) body.get(Convert.str2Hex("uniqueId")));
+            String username = Convert.hex2Str((String) body.get(Convert.str2Hex("username")));
             // 权限信息转换，后续根据uniqueId从redis中获取
             Set<Map> maps = new ObjectMapper().readValue(Convert.hex2Str((String) body.get(Convert.str2Hex("authorities"))), Set.class);
             List<SimpleGrantedAuthority> authorities = maps.stream().map((map) -> new SimpleGrantedAuthority("ROLE_" + map.get("authority"))).collect(Collectors.toList());
             // 测试中，只验证权限
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("king", "123456", authorities);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
             return usernamePasswordAuthenticationToken;
         } catch (JsonProcessingException e) {
             e.printStackTrace();

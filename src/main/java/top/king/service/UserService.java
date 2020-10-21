@@ -19,4 +19,6 @@ public interface UserService {
     ResultModel<Boolean> verifyUser(User user);
 
     User loadUserInfo(String username);
+
+    void updateAvatar(String username,String url);
 }

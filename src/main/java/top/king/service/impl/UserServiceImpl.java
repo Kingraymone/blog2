@@ -13,6 +13,7 @@ import top.king.entity.dto.UserSearchDTO;
 import top.king.mapper.UserMapper;
 import top.king.service.UserService;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -107,5 +108,17 @@ public class UserServiceImpl extends BaseService implements UserService {
             bLogger.debug("加载用户信息出错！", e);
         }
         return user;
+    }
+
+    @Override
+    public void updateAvatar(String username, String url) {
+        try {
+            HashMap<String, String> map = new HashMap<>(4);
+            map.put("username", username);
+            map.put("avatar", url);
+            userMapper.updateAvatar(map);
+        } catch (Exception e) {
+            bLogger.debug("修改用户头像出错！", e);
+        }
     }
 }

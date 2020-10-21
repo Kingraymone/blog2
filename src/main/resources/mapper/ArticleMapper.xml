@@ -126,6 +126,9 @@
             <if test='content!=null'>
                 content = #{content},
             </if>
+            <if test='keyWord==1'>
+                keyWord = 1,
+            </if>
         </set>
         where
         id = #{uniqueId}

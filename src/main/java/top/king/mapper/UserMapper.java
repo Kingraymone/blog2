@@ -6,6 +6,7 @@ import top.king.entity.User;
 import top.king.entity.dto.UserSearchDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     List<User> selectUsers(BaseQuery<UserSearchDTO> param);
@@ -19,4 +20,6 @@ public interface UserMapper {
     User verifyUser(User user);
 
     User loadUserInfo(String user);
+
+    void updateAvatar(Map map);
 }

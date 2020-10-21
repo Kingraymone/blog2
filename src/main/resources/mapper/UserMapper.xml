@@ -107,4 +107,9 @@
         where
         user_id = #{uniqueId}
     </update>
+    <update id="updateAvatar" parameterType="java.util.Map">
+        update t_user
+        set avatar = #{avatar}
+        where username = #{username}
+    </update>
 </mapper>
