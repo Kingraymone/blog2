@@ -19,7 +19,7 @@ axios.interceptors.request.use(
     // 如果存在token则在请求头添加
     let token = store.state.TOKEN;
     if(!!token) {
-      config.headers.authorization = token;
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -42,13 +42,7 @@ axios.interceptors.response.use(
     }
   },
   error => {
-    if(error.response.status === 500){
-      erroMessage("内部服务器错误！");
-    }else if(error.response.status === 403){
-      erroMessage("无权限访问！");
-    }else{
-      erroMessage(error.response.data.error);
-    }
+    erroMessage(error.message);
     return Promise.reject();
   }
 );

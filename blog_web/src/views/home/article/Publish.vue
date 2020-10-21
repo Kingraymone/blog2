@@ -6,7 +6,7 @@
         <el-breadcrumb-item>发表文章</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="container">
+    <div class="myContainer">
       <div style="max-width: 1100px">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" >
           <el-form-item label="标题" prop="title">
@@ -76,10 +76,9 @@
                     }
                 })
                     .then(function (response) {
-                        _this.ruleForm = response.data;
+                        _this.ruleForm = response.data.data;
                     })
                     .catch(function (error) {
-                        _this.commons.kMessage(error, 'error');
                     });
             },
             // 将图片上传到服务器，返回地址替换到md中
@@ -92,7 +91,7 @@
                     data: formdata,
                     headers: {'Content-Type': 'multipart/form-data'},
                 }).then((response) => {
-                    this.$refs.md.$img2Url(pos, response.data);
+                    this.$refs.md.$img2Url(pos, response.data.data);
                 })
             },
             change(value, render) {
@@ -110,7 +109,6 @@
                                 // 跳转
                             })
                             .catch(function (error) {
-                                _this.commons.kMessage(error, 'error');
                             });
                     } else {
                         return false;
@@ -128,7 +126,6 @@
                                 // 跳转
                             })
                             .catch(function (error) {
-                                _this.commons.kMessage(error, 'error');
                             });
                     } else {
                         return false;

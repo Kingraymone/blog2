@@ -6,8 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isCollapse:false,
-    TOKEN:'',
-    USER_INFO:''
+    TOKEN:localStorage.getItem("token"),
+    USER_INFO:JSON.parse(sessionStorage.getItem("userInfo"))
   },
   mutations:{
     collapseChage(state){
@@ -24,6 +24,8 @@ export default new Vuex.Store({
     removeToken(state){
       state.TOKEN='';
       state.USER_INFO='';
+      localStorage.setItem("token",'');
+      sessionStorage.setItem("userInfo",'');
     }
   }
 

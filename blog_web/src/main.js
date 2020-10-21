@@ -8,16 +8,15 @@ import axios from './utils/request'
 import ElementUI from 'element-ui'
 // 样式文件单独引入
 import 'element-ui/lib/theme-chalk/index.css'
+import 'font-awesome/css/font-awesome.css'
 // 公共方法
 import commons from './utils/common'
-
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios;
 Vue.prototype.commons=commons;
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,

@@ -6,7 +6,7 @@
         <el-breadcrumb-item><i class="el-icon-s-custom"></i> 文章管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="container">
+    <div class="myContainer">
       <!--表单搜索-->
       <el-row type="flex">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -64,7 +64,7 @@
         </el-button-group>
       </el-row>
       <!--表格-->
-      <el-row type="flex">
+      <el-row >
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <el-table
             ref="multipleTable"
@@ -201,11 +201,10 @@
                 let _this = this;
                 _this.$axios.post('/article/search', searchParam)
                     .then(function (response) {
-                        _this.tableData = response.data;
-                        _this.total = response.count
+                        _this.tableData = response.data.data;
+                        _this.total = response.data.count
                     })
                     .catch(function (error) {
-                        _this.commons.kMessage(error, 'error');
                     });
             },
             pageChange(val) {
@@ -240,7 +239,6 @@
                             _this.selectData();
                         })
                         .catch(function (error) {
-                            _this.commons.kMessage(error, 'error');
                         });
                 }
             },

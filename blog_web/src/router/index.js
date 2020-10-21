@@ -7,7 +7,8 @@ const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 };
-export default new Router({
+
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -18,7 +19,35 @@ export default new Router({
     {
       path:'/blog',
       name:'blog',
-      component: () => import("@/views/blog/Blog.vue")
+      component: () => import("@/views/blog/Blog.vue"),
+      children: [
+        {
+          path: '/blog',
+          component: () => import('@/views/blog/subject/BlogCard.vue'),
+          meta: { title: '文章显示' }
+        },
+        {
+          path: '/blog/detail/:id',
+          component: () => import('@/views/blog/subject/ArticleDetail.vue'),
+          meta: { title: '文章详情'}
+        },
+        {
+          path: '/blog/archive',
+          component: () => import('@/views/blog/subject/Archives.vue'),
+          meta: { title: '历史归档',keepAlive:true}
+        },
+        {
+          path: '/blog/about',
+          component: () => import('@/views/blog/subject/About.vue'),
+          meta: { title: '关于我',keepAlive:true}
+        },
+        {
+          path: '/blog/search',
+          name:'search',
+          component: () => import('@/views/blog/subject/Search.vue'),
+          meta: { title: '搜索内容'}
+        }
+      ]
     },
     {
       path:'/sys',
@@ -62,6 +91,17 @@ export default new Router({
         }
 
         ]
+    },
+    {
+      path:'/500',
+      name:'error',
+      component:()=>import("@/views/common/Error.vue")
+    },
+    {
+      path:'*',
+      name:'notFound',
+      component:()=>import("@/views/common/NotFound.vue")
     }
   ]
-})
+});
+export default router;

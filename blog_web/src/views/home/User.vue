@@ -6,7 +6,7 @@
         <el-breadcrumb-item><i class="el-icon-s-custom"></i> 用户管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="container">
+    <div class="myContainer">
       <!--表单搜索-->
       <el-row type="flex">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -68,7 +68,7 @@
         </el-button-group>
       </el-row>
       <!--表格-->
-      <el-row type="flex">
+      <el-row >
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
           <el-table
             ref="multipleTable"
@@ -97,7 +97,7 @@
       <!--分页-->
       <el-row type="flex" style="height: 40px">
         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-          <div style="text-align: right">
+          <div style="padding-right: 20px;float: right">
             <el-pagination
               background
               :total="total"
@@ -219,13 +219,24 @@
         <el-button size="small" type="primary" @click="editSubmitForm('editForm')">提 交</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog ref="imgDialog" title="头像上传"
+               width="40%"
+               :visible.sync="imgVisible"
+               :close-on-click-modal="true">
+      <upload :username="username" @closeUpload="imgVisible=false"></upload>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
+    import upload from '../../components/main/UpLoadImg'
     export default {
         name: "user",
+        components:{
+            upload
+        },
         data() {
             const item = {
                 createTime: '2016-05-02',
@@ -244,8 +255,10 @@
                 status: '0'
             };
             return {
+                username:'',
                 addVisible: false,
                 editVisible: false,
+                imgVisible:false,
                 addForm: {
                     username: '',
                     password: '',
@@ -344,8 +357,8 @@
                 let _this = this;
                 _this.$axios.post('/user/search', searchParam)
                     .then(function (response) {
-                        _this.tableData = response.data;
-                        _this.total = response.count
+                        _this.tableData = response.data.data;
+                        _this.total = response.data.count
                     })
                     .catch(function (error) {
 
@@ -373,7 +386,6 @@
                                 _this.selectData();
                             })
                             .catch(function(error){
-                                _this.commons.kMessage(error, 'error');
                             });
                         this.addVisible = false;
                         return true;
@@ -402,7 +414,6 @@
                                 _this.selectData();
                             })
                             .catch(function(error){
-                                _this.commons.kMessage(error, 'error');
                             });
                         this.editVisible = false;
                         return true;
@@ -429,7 +440,6 @@
                             _this.selectData();
                         })
                         .catch(function (error) {
-                            _this.commons.kMessage(error, 'error');
                         });
                 }
             },
@@ -438,7 +448,8 @@
                 if (this.rowSelections.length !== 1) {
                     this.commons.kMessage("请选择一条数据！", 'info');
                 } else {
-
+                  this.imgVisible=true;
+                  this.username=this.rowSelections[0].username;
                 }
             },
             resetForm() {

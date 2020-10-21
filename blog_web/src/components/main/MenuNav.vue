@@ -2,11 +2,9 @@
   <div>
     <el-menu class="el-menu-vertical"
              :collapse="$store.state.isCollapse"
-             background-color="#324157"
-             text-color="#bfcbd9"
+             text-color="#E7E1D9"
              active-text-color="#20a0ff"
              unique-opened
-             style="height: auto"
              router
     >
       <template v-for="item in items">
@@ -85,15 +83,15 @@
                     {
                         icon: 'el-icon-s-order',
                         index: '3',
-                        title: '表单相关',
+                        title: '常用功能',
                         subs: [
                             {
                                 index: 'form',
-                                title: '基本表单'
+                                title: '电话轰炸'
                             },
                             {
                                 index: '3-2',
-                                title: '三级菜单',
+                                title: '小说下载',
                                 subs: [
                                     {
                                         index: 'editor',
@@ -114,7 +112,7 @@
                     {
                         icon: 'el-icon-s-order',
                         index: 'icon',
-                        title: '自定义图标'
+                        title: '页面导航'
                     },
                     {
                         icon: 'el-icon-s-order',
@@ -171,4 +169,24 @@
   .el-menu-vertical:not(.el-menu--collapse) {
     width: 222px;
   }
+  /*{
+    background: -webkit-linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+    background: linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+  }*/
+  .el-menu-item{
+    background: -webkit-linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+    background: linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+  }
+  .el-submenu{
+    background: -webkit-linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+    background: linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+  }
+  .el-menu-item:hover {
+    background: #ecf5ff !important;
+  }
+  .el-menu-vertical{
+    background: -webkit-linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+    background: linear-gradient(90deg, rgb(11, 8, 10), rgb(16, 40, 63));
+  }
+
 </style>

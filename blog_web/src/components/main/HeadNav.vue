@@ -16,21 +16,21 @@
       <div class="header-right">
         <div class="header-user-con">
           <!-- 全屏显示 -->
-          <div class="btn-fullscreen">
+          <!--<div class="btn-fullscreen">
             <i class="el-icon-rank"></i>
           </div>
-          <!-- 消息中心 -->
+          &lt;!&ndash; 消息中心 &ndash;&gt;
           <div class="btn-bell">
             <i class="el-icon-bell"></i>
-          </div>
+          </div>-->
           <!-- 用户头像 -->
-          <div class="user-avator">
-            <img src="../../assets/img.jpg"/>
+          <div style="height:40px;">
+            <el-avatar fit="fill" :size="40" :src="avatar"></el-avatar>
           </div>
           <!-- 用户名下拉菜单 -->
           <el-dropdown class="user-name" trigger="hover" @command="handleCommand">
                     <span class="el-dropdown-link">
-                         king
+                         {{username}}
                         <i class="el-icon-caret-bottom  el-icon--right"></i>
                     </span>
             <el-dropdown-menu slot="dropdown">
@@ -53,7 +53,10 @@
     export default {
         name: "HeadNav",
         data() {
-            return {}
+            return {
+                avatar:this.$store.state.USER_INFO.avatar,
+                username:this.$store.state.USER_INFO.username
+            }
         },
         methods: {
             collapseChage() {
@@ -62,6 +65,7 @@
             handleCommand(command){
                 if(command==='logout'){
                     // 清除token、锁屏等
+                    this.$store.commit('removeToken');
                     this.$router.push("/sys");
                 }
             }
@@ -74,6 +78,8 @@
     width: 100%;
     height: 70px;
     font-size: 22px;
+    background: -webkit-linear-gradient(90deg, rgb(18, 18, 19), rgb(61, 65, 69));
+    background: linear-gradient(90deg, rgb(18, 18, 19), rgb(61, 65, 69));
     color: #fff;
   }
 
