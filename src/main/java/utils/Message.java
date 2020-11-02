@@ -12,4 +12,11 @@ public class Message {
 
     //校验
     //http://lxbjs.baidu.com/cb/call?callback=jQuery111106497089194085102_1598616554776&id=2&f=56&tk=228AD8F7B7ED95F5AD39BC9E0EDDF92B0D63FD4CB14855166AE253F97851B82531584F5C84E891E8EC6C33ECCD03F72E09D00B26D092AB6F557184F76E151EFB&vtel=12312312312&scode=2222&_=1598616554780
+
+    // 百度离线宝已失效
+
+    // 个人收集网站
+    //http://tel.kuaishang.cn/call.php?sid=26&did=199
+    //http://tel.kuaishang.cn/cl.php?tel=123321123283&sid=26&did=199&fromurl=Direct+input&noworkdate=&rndstr=1604314599660
+    //https://www2.huibobao.com.cn/addons/cjnet_telalert/znkf2/submit.php?form_id=oxCGLXY5&weid=2&ZNKFLXB_phone=18382027736
 }

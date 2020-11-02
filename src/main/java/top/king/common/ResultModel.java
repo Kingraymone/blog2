@@ -30,6 +30,12 @@ public class ResultModel<T> implements Serializable {
         this.msg = result ? msg : "操作失败！";
     }
 
+    public ResultModel(boolean result, String msg) {
+        this.result = result;
+        this.code = result ? SUCCESS : ERROR;
+        this.msg = msg;
+    }
+
     public ResultModel(Long count, T data) {
         this.count = count;
         this.data = data;

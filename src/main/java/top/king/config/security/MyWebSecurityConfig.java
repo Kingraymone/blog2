@@ -41,7 +41,9 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 跨域支持
         http.cors();
         // 统一异常处理+访问权限控制
-        http.exceptionHandling().and()
+        http.exceptionHandling().accessDeniedHandler(new MyAccessDeniedHandlerImpl())
+                .authenticationEntryPoint(new MyAuthenticationEntryPoint())
+                .and()
                 .authorizeRequests()
                 .antMatchers("/user/**").hasRole("SYSTEM");
         // 登陆过滤器

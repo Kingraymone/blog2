@@ -36,6 +36,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--Web应用程序测试的工具-->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version>
+        </dependency>
 
         <!--lombok接口-->
         <dependency>
