@@ -10,4 +10,6 @@ public interface FinanceService {
     ResultModel addFund(String fundcode);
 
     ResultModel<List<FundInfo>> selectFundInfo(BaseQuery<FundInfo> param);
+
+    ResultModel deleteFundInfos(List<String> primaryKey);
 }

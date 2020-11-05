@@ -10,6 +10,8 @@ import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
 import top.king.entity.Article;
 import top.king.entity.FundInfo;
+import top.king.entity.dto.FundInfoDTO;
+import top.king.mapper.FundInfoMapper;
 import top.king.service.FinanceService;
 
 import java.util.List;
@@ -29,6 +31,12 @@ public class FundController {
     @RequestMapping("/search")
     public ResultModel<List<FundInfo>> selectArticles(@RequestBody BaseQuery<FundInfo> param) {
         return financeService.selectFundInfo(param);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping("/delete")
+    public ResultModel deleteArticle(@RequestBody FundInfoDTO fundInfoDTO) {
+        return financeService.deleteFundInfos(fundInfoDTO.getPrimaryKey());
     }
 
 }

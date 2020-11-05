@@ -128,7 +128,7 @@ public class ArticleServiceImpl extends BaseService implements ArticleService {
         ResultModel resultModel = new ResultModel();
         try {
             int i = articleMapper.updateAppreciate(key);
-            if(i==0){
+            if (i == 0) {
                 resultModel.setCode("-1");
             }
             return resultModel;

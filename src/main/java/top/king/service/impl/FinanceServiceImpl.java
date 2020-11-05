@@ -31,6 +31,20 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
     NetValueMapper netValueMapper;
 
     @Override
+    public ResultModel deleteFundInfos(List<String> primaryKey) {
+        ResultModel resultModel = new ResultModel();
+        try {
+            fundInfoMapper.deleteFunds(primaryKey);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("删除基金出错！", e);
+            resultModel.setMsg("删除基金出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
     public ResultModel<List<FundInfo>> selectFundInfo(BaseQuery<FundInfo> param) {
         ResultModel<List<FundInfo>> resultModel = new ResultModel<>();
         try {
@@ -101,7 +115,13 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
                     fundInfo.setSetupDate(Integer.valueOf(m2.group(3).replace("-", "")));
                     break;
                 case 2:
-                    fundInfo.setDirector(m2.group(3));
+                    String director = m2.group(3);
+                    if (director.contains("</a>")) {
+                        int i = director.indexOf("<");
+                        int i1 = director.lastIndexOf(">");
+                        director = director.substring(0, i) + " " + director.substring(i1);
+                    }
+                    fundInfo.setDirector(director);
                     break;
                 case 3:
                     fundInfo.setFundType(m2.group(3));
@@ -129,10 +149,10 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
                     fundInfo.setPurchase(m3.group(2));
                     break;
                 case "买入确认日":
-                    fundInfo.setbDate(m3.group(2));
+                    fundInfo.setBDate(m3.group(2));
                     break;
                 case "卖出确认日":
-                    fundInfo.setsDate(m3.group(2));
+                    fundInfo.setSDate(m3.group(2));
                     break;
                 case "管理费率":
                     fundInfo.setManageRatio(m3.group(2));
@@ -156,11 +176,14 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         String[] split = pzone.split("\n");
         StringBuffer sb = new StringBuffer();
         // 申购费率：<td class="th">小于100万元</td><td>---</td><td><strike class='gray'>1.00%</strike>&nbsp;|&nbsp;0.10%</td>
-        for (int i = split.length / 2; i < split.length; i++) {
+        boolean flag = split.length % 2 == 0;
+        for (int i = flag ? split.length / 2 : 0; i < split.length; i++) {
             int i1 = split[i].indexOf("</td>");
             int i2 = split[i].lastIndexOf("</td>");
-            sb.append(split[i].substring(15, i1)).append(":");
-            sb.append(split[i].substring(i2 - 5, i2)).append("\n");
+            if (i1 != -1 && i2 != -1) {
+                sb.append(split[i].substring(15, i1)).append(":");
+                sb.append(split[i].substring(i2 - 5, i2)).append("\n");
+            }
         }
         fundInfo.setPurchaseFare(sb.toString());
         sb.delete(0, sb.length());
@@ -191,10 +214,11 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         List<Map> list1 = (List<Map>) ((Map) jsonObject.get("Data")).get("LSJZList");
         list1.forEach((item) -> {
             NetValue netValue = new NetValue();
-            netValue.setcDate(Integer.valueOf(((String) item.get("FSRQ")).replaceAll("-", "")));
+            netValue.setCDate(Integer.valueOf(((String) item.get("FSRQ")).replaceAll("-", "")));
             netValue.setFundcode(fundcode);
             netValue.setNetvalue(new BigDecimal((String) item.get("DWJZ")));
-            netValue.setIncreaseratio(new BigDecimal((String) item.get("JZZZL")));
+            String jzzzl = (String) item.get("JZZZL");
+            netValue.setIncreaseratio(new BigDecimal(jzzzl.equals("") ? 0 : Double.parseDouble(jzzzl)));
             list.add(netValue);
         });
         return list;
