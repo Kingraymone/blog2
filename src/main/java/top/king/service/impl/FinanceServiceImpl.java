@@ -31,6 +31,21 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
     NetValueMapper netValueMapper;
 
     @Override
+    public ResultModel<List> selectFundDict() {
+        ResultModel<List> resultModel = new ResultModel<>();
+        try {
+            List fundDict = fundInfoMapper.selectFundDict();
+            resultModel.setData(fundDict);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询基金字典出错！", e);
+            resultModel.setMsg("查询基金字典出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
     public ResultModel deleteFundInfos(List<String> primaryKey) {
         ResultModel resultModel = new ResultModel();
         try {
@@ -69,6 +84,7 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
             // 基金基本信息
             handleFundBriefly(fundInfo);
             // 插入基金信息表
+            fundInfoMapper.deleteFundByFundCode(fundInfo);
             fundInfoMapper.insert(fundInfo);
             // 历史净值获取
             List<NetValue> netValues = handleHistoryNetValue(fundcode);
@@ -88,6 +104,21 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         // 股票占比
         // 债券占比
         //http://www.cninfo.com.cn
+    }
+
+    @Override
+    public ResultModel<List<NetValue>> selectNetValue(String fundcode) {
+        ResultModel<List<NetValue>> resultModel = new ResultModel<>();
+        try {
+            List<NetValue> netValues = netValueMapper.selectNetValue(fundcode);
+            resultModel.setData(netValues);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询累计净值信息出错！", e);
+            resultModel.setMsg("查询累计净值信息出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
     }
 
     public void handleFundBriefly(FundInfo fundInfo) throws Exception {
