@@ -18,7 +18,7 @@ public class Service {
     public String password = "";
     @EventListener
     public void test(ContextRefreshedEvent event) {
-        System.out.println("事件完成通知！" + i++);
+        System.out.println("IOC容器刷新完成通知！" + i++);
         if (Optional.ofNullable(event).isPresent()) {
 
         }

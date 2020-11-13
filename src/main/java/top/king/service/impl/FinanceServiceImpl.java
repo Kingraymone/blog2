@@ -1,8 +1,10 @@
 package top.king.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sun.deploy.net.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.king.common.BaseQuery;
@@ -10,18 +12,22 @@ import top.king.common.BaseService;
 import top.king.common.ResultModel;
 import top.king.entity.FundInfo;
 import top.king.entity.NetValue;
+import top.king.entity.ShareDetail;
 import top.king.mapper.FundInfoMapper;
 import top.king.mapper.NetValueMapper;
 import top.king.service.FinanceService;
 import utils.Http;
+import utils.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class FinanceServiceImpl extends BaseService implements FinanceService {
@@ -87,7 +93,7 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
             fundInfoMapper.deleteFundByFundCode(fundInfo);
             fundInfoMapper.insert(fundInfo);
             // 历史净值获取
-            List<NetValue> netValues = handleHistoryNetValue(fundcode);
+            List<NetValue> netValues = handleHistoryNetValue(fundcode,1,3650);
             // 历史净值插入表中
             netValueMapper.batchInsert(netValues);
             return new ResultModel(true);
@@ -104,6 +110,67 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         // 股票占比
         // 债券占比
         //http://www.cninfo.com.cn
+    }
+
+    @Override
+    public ResultModel purchaseHandle(ShareDetail shareDetail) {
+        return null;
+    }
+
+    @Override
+    public ResultModel redeemHandle(ShareDetail shareDetail) {
+        return null;
+    }
+
+    /**
+     * 以10天的维度来更新
+     * @param fundcode
+     * @return
+     */
+    @Override
+    public ResultModel updateHistoryNetValue(String fundcode) {
+        ResultModel resultModel = new ResultModel();
+        try {
+            List<NetValue> netValues = handleHistoryNetValue(fundcode, 1, 10);
+            Integer maxDate = netValueMapper.setlectMaxDate();
+            List<NetValue> collect = netValues.stream().filter((item) -> {
+                return item.getCDate() > maxDate;
+            }).collect(Collectors.toList());
+            netValueMapper.batchInsert(netValues);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("更新历史净值出错！", e);
+            resultModel.setMsg("更新历史净值出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
+    public ResultModel<Map> selectCurNetValue(String fundcode) {
+        ResultModel<Map> resultModel = new ResultModel<>();
+        if (StringUtils.isEmpty(fundcode)) {
+            return resultModel;
+        }
+        String url = "http://fundgz.1234567.com.cn/js/" + fundcode + ".js";
+        Long date = Instant.now().toEpochMilli();
+        Map<String, String> map = new HashMap<>(8);
+        map.put("Host", "fundgz.1234567.com.cn");
+        map.put("Referer", "http://fundf10.eastmoney.com/");
+        try {
+            String s = Http.doGet(url + "?rt=" + date, map);
+            int start = s.indexOf("{");
+            int end = s.lastIndexOf("}");
+            String json = s.substring(start, end + 1);
+            Map value = new ObjectMapper().readValue(json, Map.class);
+            resultModel.setData(value);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询实时净值信息出错！", e);
+            resultModel.setMsg("查询实时净值出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
     }
 
     @Override
@@ -232,10 +299,10 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         fundInfo.setRedeemFare(sb.toString());
     }
 
-    public List<NetValue> handleHistoryNetValue(String fundcode) throws Exception {
+    public List<NetValue> handleHistoryNetValue(String fundcode,int start,int end) throws Exception {
         List<NetValue> list = new ArrayList<>();
         // 默认最近10年的历史净值
-        String url = "http://api.fund.eastmoney.com/f10/lsjz?fundCode=" + fundcode + "&pageIndex=1&pageSize=3650";
+        String url = "http://api.fund.eastmoney.com/f10/lsjz?fundCode=" + fundcode + "&pageIndex="+start+"&pageSize="+end;
         // 需要Host和Referer头部
         Map<String, String> map = new HashMap<>(8);
         map.put("Host", "api.fund.eastmoney.com");

@@ -4,6 +4,7 @@ import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
 import top.king.entity.FundInfo;
 import top.king.entity.NetValue;
+import top.king.entity.ShareDetail;
 
 import javax.xml.transform.Result;
 import java.util.List;
@@ -19,6 +20,34 @@ public interface FinanceService {
     ResultModel<List<NetValue>> selectNetValue(String fundcode);
 
     ResultModel<List> selectFundDict();
+
+    /**
+     * 根据基金代码查询实时单位净值
+     * @param fundcode
+     * @return
+     */
+    ResultModel<Map> selectCurNetValue(String fundcode);
+
+    /**
+     * 更新当前基金的历史净值
+     * @param fundcode
+     * @return
+     */
+    ResultModel updateHistoryNetValue(String fundcode);
+
+    /**
+     * 申购处理
+     * @param shareDetail
+     * @return
+     */
+    ResultModel purchaseHandle(ShareDetail shareDetail);
+
+    /**
+     * 赎回处理
+     * @param shareDetail
+     * @return
+     */
+    ResultModel redeemHandle(ShareDetail shareDetail);
 
     /**
      * 基金模拟买入实现  展示要点：持有天数，收益，收益率

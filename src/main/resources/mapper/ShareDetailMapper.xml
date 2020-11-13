@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.ShareDetailMapper">
+  <resultMap id="BaseResultMap" type="top.king.entity.ShareDetail">
+      <result property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="dDate" column="d_date" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="businessType" column="business_type" javaType="java.lang.String" jdbcType="CHAR" />
+      <result property="dRequest" column="d_request" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="pBalance" column="p_balance" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <result property="rFare" column="r_fare" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="top.king.entity.ShareDetail">
+    insert into t_sharedetail (id, fundcode, d_date, 
+      username, business_type, shares, 
+      d_request, purchase, redeem, 
+      p_balance, r_fare, balances
+      )
+    values (#{id,jdbcType=INTEGER}, #{fundcode,jdbcType=VARCHAR}, #{dDate,jdbcType=INTEGER}, 
+      #{username,jdbcType=VARCHAR}, #{businessType,jdbcType=CHAR}, #{shares,jdbcType=DECIMAL}, 
+      #{dRequest,jdbcType=INTEGER}, #{purchase,jdbcType=DECIMAL}, #{redeem,jdbcType=DECIMAL}, 
+      #{pBalance,jdbcType=DECIMAL}, #{rFare,jdbcType=DECIMAL}, #{balances,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="top.king.entity.ShareDetail">
+    insert into t_sharedetail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fundcode != null">
+        fundcode,
+      </if>
+      <if test="dDate != null">
+        d_date,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="shares != null">
+        shares,
+      </if>
+      <if test="dRequest != null">
+        d_request,
+      </if>
+      <if test="purchase != null">
+        purchase,
+      </if>
+      <if test="redeem != null">
+        redeem,
+      </if>
+      <if test="pBalance != null">
+        p_balance,
+      </if>
+      <if test="rFare != null">
+        r_fare,
+      </if>
+      <if test="balances != null">
+        balances,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fundcode != null">
+        #{fundcode,jdbcType=VARCHAR},
+      </if>
+      <if test="dDate != null">
+        #{dDate,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=CHAR},
+      </if>
+      <if test="shares != null">
+        #{shares,jdbcType=DECIMAL},
+      </if>
+      <if test="dRequest != null">
+        #{dRequest,jdbcType=INTEGER},
+      </if>
+      <if test="purchase != null">
+        #{purchase,jdbcType=DECIMAL},
+      </if>
+      <if test="redeem != null">
+        #{redeem,jdbcType=DECIMAL},
+      </if>
+      <if test="pBalance != null">
+        #{pBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="rFare != null">
+        #{rFare,jdbcType=DECIMAL},
+      </if>
+      <if test="balances != null">
+        #{balances,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>
