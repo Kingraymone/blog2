@@ -44,4 +44,9 @@ public class NetValueController {
         return financeService.redeemHandle(shareDetail);
     }
 
+    @RequestMapping("/profit")
+    public ResultModel calculateProfit(String fundcode) {
+        return financeService.calculateProfit(fundcode);
+    }
+
 }

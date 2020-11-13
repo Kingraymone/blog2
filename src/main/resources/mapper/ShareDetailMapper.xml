@@ -100,4 +100,116 @@
       </if>
     </trim>
   </insert>
+  <insert id="insertShareDetailByDuplicate" parameterType="top.king.entity.ShareDetail">
+    insert into t_sharedetail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fundcode != null">
+        fundcode,
+      </if>
+      <if test="dDate != null">
+        d_date,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="shares != null">
+        shares,
+      </if>
+      <if test="dRequest != null">
+        d_request,
+      </if>
+      <if test="purchase != null">
+        purchase,
+      </if>
+      <if test="redeem != null">
+        redeem,
+      </if>
+      <if test="pBalance != null">
+        p_balance,
+      </if>
+      <if test="rFare != null">
+        r_fare,
+      </if>
+      <if test="balances != null">
+        balances,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fundcode != null">
+        #{fundcode,jdbcType=VARCHAR},
+      </if>
+      <if test="dDate != null">
+        #{dDate,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=CHAR},
+      </if>
+      <if test="shares != null">
+        #{shares,jdbcType=DECIMAL},
+      </if>
+      <if test="dRequest != null">
+        #{dRequest,jdbcType=INTEGER},
+      </if>
+      <if test="purchase != null">
+        #{purchase,jdbcType=DECIMAL},
+      </if>
+      <if test="redeem != null">
+        #{redeem,jdbcType=DECIMAL},
+      </if>
+      <if test="pBalance != null">
+        #{pBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="rFare != null">
+        #{rFare,jdbcType=DECIMAL},
+      </if>
+      <if test="balances != null">
+        #{balances,jdbcType=DECIMAL},
+      </if>
+    </trim>
+    on DUPLICATE  key update
+    <trim  suffixOverrides=",">
+    <if test="dDate != null">
+      d_date=#{dDate,jdbcType=INTEGER},
+    </if>
+    <if test="username != null">
+      username=#{username,jdbcType=VARCHAR},
+    </if>
+    <if test="businessType != null">
+      business_Type=#{businessType,jdbcType=CHAR},
+    </if>
+    <if test="shares != null">
+      shares=#{shares,jdbcType=DECIMAL},
+    </if>
+    <if test="dRequest != null">
+      d_Request=#{dRequest,jdbcType=INTEGER},
+    </if>
+    <if test="purchase != null">
+      purchase=#{purchase,jdbcType=DECIMAL},
+    </if>
+    <if test="redeem != null">
+      redeem=#{redeem,jdbcType=DECIMAL},
+    </if>
+    <if test="pBalance != null">
+      p_Balance= #{pBalance,jdbcType=DECIMAL},
+    </if>
+    <if test="rFare != null">
+      r_Fare=#{rFare,jdbcType=DECIMAL},
+    </if>
+    <if test="balances != null">
+      balances=#{balances,jdbcType=DECIMAL},
+    </if>
+    </trim>
+  </insert>
 </mapper>

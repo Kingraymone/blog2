@@ -6,4 +6,6 @@ public interface ShareDetailMapper {
     int insert(ShareDetail record);
 
     int insertSelective(ShareDetail record);
+
+    void insertShareDetailByDuplicate(ShareDetail shareDetail);
 }

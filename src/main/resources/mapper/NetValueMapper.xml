@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.NetValueMapper">
+    <resultMap id="BaseResultMap" type="top.king.entity.NetValue">
+        <id property="uniqueId" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="fundcode" column="fundcode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="cDate" column="c_date" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="netvalue" column="netvalue" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>
+        <result property="increaseratio" column="increaseratio" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>
+    </resultMap>
+    <insert id="insert" parameterType="top.king.entity.NetValue">
+    insert into t_netvalue ( fundcode, c_date,
+      netvalue, increaseratio)
+    values ( #{fundcode,jdbcType=VARCHAR}, #{cDate,jdbcType=INTEGER},
+      #{netvalue,jdbcType=DECIMAL}, #{increaseratio,jdbcType=DECIMAL})
+  </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into t_netvalue ( fundcode, c_date,
+        netvalue, increaseratio) values
+        <foreach item="item" index="index" collection="list" open=" " close=";" separator=",">
+             ( #{item.fundcode,jdbcType=VARCHAR}, #{item.cDate,jdbcType=INTEGER},
+            #{item.netvalue,jdbcType=DECIMAL}, #{item.increaseratio,jdbcType=DECIMAL})
+        </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="top.king.entity.NetValue">
+        insert into t_netvalue
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uniqueId != null">
+                id,
+            </if>
+            <if test="fundcode != null">
+                fundcode,
+            </if>
+            <if test="cDate != null">
+                c_date,
+            </if>
+            <if test="netvalue != null">
+                netvalue,
+            </if>
+            <if test="increaseratio != null">
+                increaseratio,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uniqueId != null">
+                #{uniqueId,jdbcType=INTEGER},
+            </if>
+            <if test="fundcode != null">
+                #{fundcode,jdbcType=VARCHAR},
+            </if>
+            <if test="cDate != null">
+                #{cDate,jdbcType=INTEGER},
+            </if>
+            <if test="netvalue != null">
+                #{netvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="increaseratio != null">
+                #{increaseratio,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <select id="setlectMaxDate" resultType="java.lang.Integer">
+        select max(c_date)
+        from t_netvalue
+    </select>
+    <select id="selectNetValue" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from t_netvalue t
+        <where>
+            <if test="fundcode != null">
+                and fundcode = #{fundcode,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by c_date asc
+    </select>
+    <select id="selectByNetvalue" resultType="top.king.entity.NetValue" resultMap="BaseResultMap">
+        select *
+        from t_netvalue t
+        <where>
+            <if test="fundcode != null">
+                and fundcode = #{fundcode,jdbcType=VARCHAR}
+            </if>
+            <if test="cDate != null">
+                and c_date=#{cDate,jdbcType=INTEGER}
+            </if>
+            <if test="uniqueId != null">
+                and id = #{uniqueId,jdbcType=INTEGER},
+            </if>
+        </where>
+        order by c_date asc
+    </select>
+    <delete id="deleteNetValues" parameterType="top.king.entity.NetValue">
+        delete
+        from t_netvalue
+        <where>
+            <if test='fundcode!=null and fundcode!=""'>
+                and fundcode = #{fundcode}
+            </if>
+            <if test="cDate != null">
+                and c_date=#{cDate,jdbcType=INTEGER}
+            </if>
+        </where>
+    </delete>
+</mapper>

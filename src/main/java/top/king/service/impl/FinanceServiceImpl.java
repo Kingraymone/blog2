@@ -10,16 +10,14 @@ import org.springframework.stereotype.Service;
 import top.king.common.BaseQuery;
 import top.king.common.BaseService;
 import top.king.common.ResultModel;
-import top.king.entity.FundInfo;
-import top.king.entity.NetValue;
-import top.king.entity.ShareDetail;
-import top.king.mapper.FundInfoMapper;
-import top.king.mapper.NetValueMapper;
+import top.king.entity.*;
+import top.king.mapper.*;
 import top.king.service.FinanceService;
 import utils.Http;
 import utils.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +33,12 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
     FundInfoMapper fundInfoMapper;
     @Autowired
     NetValueMapper netValueMapper;
+    @Autowired
+    FareRatioMapper fareRatioMapper;
+    @Autowired
+    ShareDetailMapper shareDetailMapper;
+    @Autowired
+    StaticShareMapper staticShareMapper;
 
     @Override
     public ResultModel<List> selectFundDict() {
@@ -114,11 +118,71 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
 
     @Override
     public ResultModel purchaseHandle(ShareDetail shareDetail) {
-        return null;
+        // 申购金额+申购日期+基金代码
+        ResultModel resultModel = new ResultModel();
+        try {
+            // 申购日期净值获得，不存在净值则暂存份额明细表，等待净值更新后重新计算
+            NetValue netValue = new NetValue();
+            netValue.setCDate(shareDetail.getDRequest());
+            netValue.setFundcode(shareDetail.getFundcode());
+            List<NetValue> netValues = netValueMapper.selectByNetvalue(netValue);
+            BigDecimal value = null;
+            if (netValues.size() < 1) {
+                shareDetail.setBusinessType("9");
+            } else {
+                value = netValues.get(0).getNetvalue();
+            }
+            if (value != null) {
+                // 根据申购金额获得申购费率，不存在返回FALSE
+                Map<String, String> map = new HashMap<>(4);
+                map.put("balance", String.valueOf(shareDetail.getPBalance()));
+                map.put("fundcode", shareDetail.getFundcode());
+                FareRatio fareRatio = fareRatioMapper.selectFareRatioByPM(map);
+                if(fareRatio==null){
+                    resultModel.setResult(false);
+                    resultModel.setMsg("请维护基金["+map.get("fundcode")+"]的费率信息！");
+                    return resultModel;
+                }
+                // 计算申购费用
+                BigDecimal ratio = new BigDecimal(String.valueOf(fareRatio.getRatio()));
+                BigDecimal balance = new BigDecimal(String.valueOf(shareDetail.getPBalance()));
+                BigDecimal fare = balance.divide((ratio.add(new BigDecimal(1))),4,BigDecimal.ROUND_HALF_UP).multiply(ratio).setScale(8,BigDecimal.ROUND_HALF_UP);
+                shareDetail.setPurchase(fare.doubleValue());
+                // 计算申购份额
+                BigDecimal share = balance.subtract(fare).divide(value,2,BigDecimal.ROUND_HALF_UP);
+                shareDetail.setShares(share.doubleValue());
+            }
+            // 插入份额明细表
+            shareDetailMapper.insertShareDetailByDuplicate(shareDetail);
+            // 更细静态份额表
+            if (shareDetail.getBusinessType().equals("9")) {
+                // 申购暂存数据重新计算
+                resultModel.setMsg("申购信息暂存，等待净值更新！");
+            } else {
+                StaticShare staticShare = new StaticShare();
+                staticShare.setFundcode(shareDetail.getFundcode());
+                staticShare.setShares(shareDetail.getShares());
+                BigDecimal bigDecimal = new BigDecimal(String.valueOf(shareDetail.getPBalance()));
+                BigDecimal bigDecimal1 = new BigDecimal(String.valueOf(shareDetail.getPurchase()));
+                staticShare.setBalances(bigDecimal.subtract(bigDecimal1).doubleValue());
+                staticShareMapper.insertStaticShareByDuplicate(staticShare);
+            }
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("基金申购出错！", e);
+            resultModel.setMsg("基金申购出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
     }
 
     @Override
     public ResultModel redeemHandle(ShareDetail shareDetail) {
+        return null;
+    }
+
+    @Override
+    public ResultModel<Map> calculateProfit(String fundcode) {
         return null;
     }
 

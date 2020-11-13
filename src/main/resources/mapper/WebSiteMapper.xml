@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.WebSiteMapper">
+  <resultMap id="BaseResultMap" type="top.king.entity.WebSite">
+      <id property="uniqueId" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="top.king.entity.WebSite">
+    insert into t_website ( weburl, title,
+      memo, favicon)
+    values ( #{weburl,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+      #{memo,jdbcType=VARCHAR}, #{favicon,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="top.king.entity.WebSite">
+    insert into t_website
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uniqueId != null">
+        id,
+      </if>
+      <if test="weburl != null">
+        weburl,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="memo != null">
+        memo,
+      </if>
+      <if test="favicon != null">
+        favicon,
+      </if>
+      <if test="host != null">
+        host,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uniqueId != null">
+        #{uniqueId,jdbcType=INTEGER},
+      </if>
+      <if test="weburl != null">
+        #{weburl,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="favicon != null">
+        #{favicon,jdbcType=VARCHAR},
+      </if>
+      <if test="host != null">
+        #{host,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <delete id="deleteWebSite" parameterType="java.lang.String">
+    delete t
+    from t_website t
+    where t.id = #{uniqueId}
+  </delete>
+  <select id="selectWebSite" resultMap="BaseResultMap">
+    select * from t_website;
+  </select>
+
+
+</mapper>

@@ -50,6 +50,13 @@ public interface FinanceService {
     ResultModel redeemHandle(ShareDetail shareDetail);
 
     /**
+     * 计算收益情况
+     * @param fundcode
+     * @return
+     */
+    ResultModel<Map> calculateProfit(String fundcode);
+
+    /**
      * 基金模拟买入实现  展示要点：持有天数，收益，收益率
      * 基金费率表：申购、赎回费率
      * 基金静态份额表：基金代码、申请日期、业务标志(申购赎回)
