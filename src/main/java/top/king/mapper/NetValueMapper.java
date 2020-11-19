@@ -17,5 +17,5 @@ public interface NetValueMapper {
 
     List<NetValue> selectByNetvalue(NetValue newValue);
 
-    Integer setlectMaxDate();
+    Integer setlectMaxDate(String fundcode);
 }

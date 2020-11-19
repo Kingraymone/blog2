@@ -27,7 +27,11 @@ public class StaticShare implements Serializable, Cloneable {
      */
     private Double profit;
     /**
-     * 当前金额
+     * 持仓金额
      */
     private Double balances;
+    /**
+     * 持仓成本
+     */
+    private Double netvalue;
 }

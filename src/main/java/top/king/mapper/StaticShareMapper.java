@@ -8,4 +8,6 @@ public interface StaticShareMapper {
     int insertSelective(StaticShare record);
 
     void insertStaticShareByDuplicate(StaticShare staticShare);
+
+    void updateStaticShare(StaticShare staticShare);
 }

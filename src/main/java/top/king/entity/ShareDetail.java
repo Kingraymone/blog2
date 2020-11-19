@@ -23,7 +23,7 @@ public class ShareDetail implements Serializable, Cloneable {
      */
     private String username;
     /**
-     * 业务类型
+     * 业务类型;0申购1赎回 7申购份额已被赎回 8赎回暂存 9申购暂存
      */
     private String businessType;
     /**
@@ -54,4 +54,12 @@ public class ShareDetail implements Serializable, Cloneable {
      * 确认金额
      */
     private Double balances;
+    /**
+     * 当日净值;申请当日净值
+     */
+    private Double netvalue;
+    /**
+     * 本金;每笔申购赎回对应的本金
+     */
+    private Double original;
 }

@@ -2,24 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.king.mapper.ShareDetailMapper">
   <resultMap id="BaseResultMap" type="top.king.entity.ShareDetail">
-      <result property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <result property="dDate" column="d_date" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <result property="businessType" column="business_type" javaType="java.lang.String" jdbcType="CHAR" />
-      <result property="dRequest" column="d_request" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <result property="pBalance" column="p_balance" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
-      <result property="rFare" column="r_fare" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+    <result column="id" javaType="java.lang.Integer" jdbcType="INTEGER" property="id" />
+    <result column="d_date" javaType="java.lang.Integer" jdbcType="INTEGER" property="dDate" />
+    <result column="business_type" javaType="java.lang.String" jdbcType="CHAR" property="businessType" />
+    <result column="d_request" javaType="java.lang.Integer" jdbcType="INTEGER" property="dRequest" />
+    <result column="p_balance" javaType="java.lang.Double" jdbcType="DECIMAL" property="pBalance" />
+    <result column="r_fare" javaType="java.lang.Double" jdbcType="DECIMAL" property="rFare" />
   </resultMap>
   <insert id="insert" parameterType="top.king.entity.ShareDetail">
-    insert into t_sharedetail (id, fundcode, d_date, 
-      username, business_type, shares, 
-      d_request, purchase, redeem, 
-      p_balance, r_fare, balances
-      )
-    values (#{id,jdbcType=INTEGER}, #{fundcode,jdbcType=VARCHAR}, #{dDate,jdbcType=INTEGER}, 
-      #{username,jdbcType=VARCHAR}, #{businessType,jdbcType=CHAR}, #{shares,jdbcType=DECIMAL}, 
-      #{dRequest,jdbcType=INTEGER}, #{purchase,jdbcType=DECIMAL}, #{redeem,jdbcType=DECIMAL}, 
-      #{pBalance,jdbcType=DECIMAL}, #{rFare,jdbcType=DECIMAL}, #{balances,jdbcType=DECIMAL}
-      )
+    insert into t_sharedetail ( fundcode, d_date,
+      username, business_type, shares,
+      d_request, purchase, redeem,
+      p_balance, r_fare, balances,
+      netvalue, original)
+    values ( #{fundcode,jdbcType=VARCHAR}, #{dDate,jdbcType=INTEGER},
+      #{username,jdbcType=VARCHAR}, #{businessType,jdbcType=CHAR}, #{shares,jdbcType=DECIMAL},
+      #{dRequest,jdbcType=INTEGER}, #{purchase,jdbcType=DECIMAL}, #{redeem,jdbcType=DECIMAL},
+      #{pBalance,jdbcType=DECIMAL}, #{rFare,jdbcType=DECIMAL}, #{balances,jdbcType=DECIMAL},
+      #{netvalue,jdbcType=DECIMAL}, #{original,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="top.king.entity.ShareDetail">
     insert into t_sharedetail
@@ -60,6 +60,12 @@
       <if test="balances != null">
         balances,
       </if>
+      <if test="netvalue != null">
+        netvalue,
+      </if>
+      <if test="original != null">
+        original,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -98,8 +104,15 @@
       <if test="balances != null">
         #{balances,jdbcType=DECIMAL},
       </if>
+      <if test="netvalue != null">
+        #{netvalue,jdbcType=DECIMAL},
+      </if>
+      <if test="original != null">
+        #{original,jdbcType=DECIMAL},
+      </if>
     </trim>
   </insert>
+
   <insert id="insertShareDetailByDuplicate" parameterType="top.king.entity.ShareDetail">
     insert into t_sharedetail
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -139,6 +152,12 @@
       <if test="balances != null">
         balances,
       </if>
+      <if test="netvalue != null">
+        netvalue,
+      </if>
+      <if test="original != null">
+        original,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -177,9 +196,15 @@
       <if test="balances != null">
         #{balances,jdbcType=DECIMAL},
       </if>
+      <if test="netvalue != null">
+        #{netvalue,jdbcType=DECIMAL},
+      </if>
+      <if test="original != null">
+        #{original,jdbcType=DECIMAL},
+      </if>
     </trim>
     on DUPLICATE  key update
-    <trim  suffixOverrides=",">
+    <trim suffixOverrides=",">
     <if test="dDate != null">
       d_date=#{dDate,jdbcType=INTEGER},
     </if>
@@ -210,6 +235,59 @@
     <if test="balances != null">
       balances=#{balances,jdbcType=DECIMAL},
     </if>
+    <if test="netvalue != null">
+      netvalue=#{netvalue,jdbcType=DECIMAL},
+    </if>
+    <if test="original != null">
+      original=#{original,jdbcType=DECIMAL},
+    </if>
     </trim>
   </insert>
+  <update id="updateShareDetail" parameterType="top.king.entity.ShareDetail">
+    update t_sharedetail
+    <set>
+      business_Type=#{businessType,jdbcType=CHAR},
+      shares=#{shares,jdbcType=DECIMAL},
+      r_Fare=#{rFare,jdbcType=DECIMAL}
+    </set>
+    where
+    id=#{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectShareDetailByType" parameterType="top.king.entity.ShareDetail" resultMap="BaseResultMap">
+    select * from t_sharedetail
+    <where>
+        fundcode=#{fundcode,jdbcType=VARCHAR}
+      <if test="dDate != null">
+        and d_date=#{dDate,jdbcType=INTEGER}
+      </if>
+      <if test="username != null">
+        and username=#{username,jdbcType=VARCHAR}
+      </if>
+      <if test="businessType != null">
+        and business_Type=#{businessType,jdbcType=CHAR}
+      </if>
+      <if test="shares != null">
+        and shares=#{shares,jdbcType=DECIMAL}
+      </if>
+      <if test="dRequest != null">
+        and d_Request=#{dRequest,jdbcType=INTEGER}
+      </if>
+      <if test="purchase != null">
+        and purchase=#{purchase,jdbcType=DECIMAL}
+      </if>
+      <if test="redeem != null">
+        and redeem=#{redeem,jdbcType=DECIMAL}
+      </if>
+      <if test="pBalance != null">
+        and p_Balance= #{pBalance,jdbcType=DECIMAL}
+      </if>
+      <if test="rFare != null">
+        and r_Fare=#{rFare,jdbcType=DECIMAL}
+      </if>
+      <if test="balances != null">
+        and balances=#{balances,jdbcType=DECIMAL}
+      </if>
+    </where>
+    order by d_Request asc
+  </select>
 </mapper>

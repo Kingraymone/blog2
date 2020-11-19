@@ -59,10 +59,12 @@
             </if>
         </trim>
     </insert>
-    <select id="setlectMaxDate" resultType="java.lang.Integer">
+    <select id="setlectMaxDate" parameterType="java.lang.String" resultType="java.lang.Integer">
         select max(c_date)
         from t_netvalue
+        where fundcode=#{fundcode}
     </select>
+
     <select id="selectNetValue" parameterType="java.lang.String" resultMap="BaseResultMap">
         select *
         from t_netvalue t
@@ -89,6 +91,7 @@
         </where>
         order by c_date asc
     </select>
+
     <delete id="deleteNetValues" parameterType="top.king.entity.NetValue">
         delete
         from t_netvalue
