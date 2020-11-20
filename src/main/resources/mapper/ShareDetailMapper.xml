@@ -290,4 +290,16 @@
     </where>
     order by d_Request asc
   </select>
+  <select id="selectPurchaseFare" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+    select sum(purchase)
+    from t_sharedetail
+    where business_Type='0'
+    and fundcode=#{fundcode}
+  </select>
+  <select id="selectHistoryProfit" parameterType="java.lang.String" resultType="java.util.Map">
+    select sum(original) as original,sum(balances) as balances
+    from t_sharedetail
+    where business_Type='1'
+    and fundcode=#{fundcode}
+  </select>
 </mapper>

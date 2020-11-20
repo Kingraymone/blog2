@@ -10,4 +10,6 @@ public interface StaticShareMapper {
     void insertStaticShareByDuplicate(StaticShare staticShare);
 
     void updateStaticShare(StaticShare staticShare);
+
+    StaticShare selectStaticShare(StaticShare staticShare);
 }

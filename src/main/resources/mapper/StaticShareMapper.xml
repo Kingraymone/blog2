@@ -127,4 +127,19 @@
      balances = round(netvalue*shares,2)
     where fundcode = #{fundcode,jdbcType=VARCHAR}
   </update>
+  <select id="selectStaticShare" parameterType="top.king.entity.StaticShare" resultType="top.king.entity.StaticShare">
+    select *
+    from t_staticshare
+    <where>
+      <if test="id != null">
+        and id=#{id}
+      </if>
+      <if test="fundcode != null">
+        and fundcode=#{fundcode}
+      </if>
+      <if test="username != null">
+        and username=#{username}
+      </if>
+    </where>
+  </select>
 </mapper>

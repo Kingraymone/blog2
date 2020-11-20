@@ -343,7 +343,7 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
                 // 赎回暂存数据重新计算
                 resultModel.setMsg("赎回信息暂存，等待净值更新！");
             } else {
-                for(StaticShare staticShare:staticShares) {
+                for (StaticShare staticShare : staticShares) {
                     staticShareMapper.updateStaticShare(staticShare);
                 }
             }
@@ -357,14 +357,44 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
     }
 
     /**
-     * 持仓金额+申购费用  / 持有份额 = 真实持仓成本
+     * 返回历史收益信息和当前持仓净值和持仓金额
+     * 1.查询静态份额表获得当前持仓信息
+     * 2.查询份额明细表，类型为7的申购和所有赎回
      *
      * @param fundcode
      * @return
      */
     @Override
     public ResultModel<Map> calculateProfit(String fundcode) {
-        return null;
+        ResultModel<Map> resultModel = new ResultModel<>();
+        Map<String, String> map = null;
+        try {
+            map = new HashMap<>(16);
+            // 当前持仓查询，实时显示需要减去当前业务类型为0申购的申购费用，由前台处理
+            StaticShare staticShare = new StaticShare();
+            staticShare.setFundcode(fundcode);
+            StaticShare staticShare1 = staticShareMapper.selectStaticShare(staticShare);
+            BigDecimal purchaseFare = shareDetailMapper.selectPurchaseFare(fundcode);
+            map.put("holdShare", staticShare1 == null ? "0" : String.valueOf(staticShare1.getShares()));
+            map.put("holdNetValue", staticShare1 == null ? "0" : String.valueOf(staticShare1.getNetvalue()));
+            map.put("holdBalance", staticShare1 == null ? "0" : String.valueOf(staticShare1.getBalances()));
+            map.put("purchaseFare", purchaseFare == null ? "0" : purchaseFare.toString());
+            // 历史收益计算
+            Map map1 = shareDetailMapper.selectHistoryProfit(fundcode);
+            if(map1==null){
+                map1=new HashMap<String,String>();
+                map1.put("original","0");
+                map1.put("balances","0");
+            }
+            map.putAll(map1);
+            resultModel.setData(map);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询收益情况出错！", e);
+            resultModel.setResult(false);
+            resultModel.setMsg("查询收益情况出错！");
+            return resultModel;
+        }
     }
 
     /**
