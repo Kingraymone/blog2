@@ -56,6 +56,8 @@ public interface FinanceService {
      */
     ResultModel<Map> calculateProfit(String fundcode);
 
+    ResultModel<List<ShareDetail>> selectShareDetails(String fundcode);
+
     /**
      * 基金模拟买入实现  展示要点：持有天数，收益，收益率
      * 基金费率表：申购、赎回费率

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
 import top.king.entity.NetValue;
 import top.king.entity.ShareDetail;
@@ -35,7 +34,7 @@ public class NetValueController {
     }
 
     @RequestMapping("/purchase")
-    public ResultModel purchaseHandle(@RequestBody  ShareDetail shareDetail) {
+    public ResultModel purchaseHandle(@RequestBody ShareDetail shareDetail) {
         return financeService.purchaseHandle(shareDetail);
     }
 
@@ -47,6 +46,11 @@ public class NetValueController {
     @RequestMapping("/profit")
     public ResultModel calculateProfit(String fundcode) {
         return financeService.calculateProfit(fundcode);
+    }
+
+    @RequestMapping("/detail")
+    public ResultModel<List<ShareDetail>> selectRedeemShareDeatil(String fundcode) {
+        return financeService.selectShareDetails(fundcode);
     }
 
 }

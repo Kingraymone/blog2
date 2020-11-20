@@ -51,4 +51,5 @@ public class FundController {
         return financeService.deleteFundInfos(fundInfoDTO.getPrimaryKey());
     }
 
+
 }

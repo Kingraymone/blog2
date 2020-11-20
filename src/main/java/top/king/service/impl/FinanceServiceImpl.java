@@ -381,10 +381,10 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
             map.put("purchaseFare", purchaseFare == null ? "0" : purchaseFare.toString());
             // 历史收益计算
             Map map1 = shareDetailMapper.selectHistoryProfit(fundcode);
-            if(map1==null){
-                map1=new HashMap<String,String>();
-                map1.put("original","0");
-                map1.put("balances","0");
+            if (map1 == null) {
+                map1 = new HashMap<String, String>();
+                map1.put("original", "0");
+                map1.put("balances", "0");
             }
             map.putAll(map1);
             resultModel.setData(map);
@@ -423,6 +423,25 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         } catch (Exception e) {
             bLogger.debug("更新历史净值出错！", e);
             resultModel.setMsg("更新历史净值出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+
+    @Override
+    public ResultModel<List<ShareDetail>> selectShareDetails(String fundcode) {
+        ResultModel<List<ShareDetail>> resultModel = new ResultModel<>();
+        try {
+            ShareDetail shareDetail = new ShareDetail();
+            shareDetail.setFundcode(fundcode);
+            shareDetail.setBusinessType("1");
+            List<ShareDetail> shareDetails = shareDetailMapper.selectShareDetailByType(shareDetail);
+            resultModel.setData(shareDetails);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("查询赎回份额信息出错！", e);
+            resultModel.setMsg("查询赎回份额信息出错！");
             resultModel.setResult(false);
             return resultModel;
         }
