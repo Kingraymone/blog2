@@ -12,6 +12,7 @@ import top.king.entity.User;
 import top.king.entity.dto.UserSearchDTO;
 import top.king.mapper.UserMapper;
 import top.king.service.UserService;
+import utils.Encryption;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     public ResultModel addUser(User user) {
         ResultModel resultModel = new ResultModel();
         try {
+            byte[] decrypt = Encryption.privateDecrypt(Encryption.base642Byte(user.getPassword()), Encryption.string2PrivateKey(Encryption.PRIVATE_KEY));
+            user.setPassword(Encryption.encode(new String(decrypt)));
             userMapper.insertUser(user);
             return resultModel;
         } catch (Exception e) {
@@ -56,6 +59,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     public ResultModel updateUser(User user) {
         ResultModel resultModel = new ResultModel();
         try {
+            byte[] decrypt = Encryption.privateDecrypt(Encryption.base642Byte(user.getPassword()), Encryption.string2PrivateKey(Encryption.PRIVATE_KEY));
+            user.setPassword(Encryption.encode(new String(decrypt)));
             userMapper.updateUser(user);
             return resultModel;
         } catch (Exception e) {

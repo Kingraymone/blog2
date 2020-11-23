@@ -2,14 +2,13 @@ package utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
-import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import top.king.config.security.JwtUser;
 import top.king.entity.User;
 
-import java.security.Key;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;

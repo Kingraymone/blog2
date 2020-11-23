@@ -2,6 +2,7 @@ package top.king.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -11,6 +12,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 import top.king.common.ResultModel;
 import top.king.entity.User;
+import utils.Encryption;
 import utils.JwtTokenUtil;
 import utils.StringUtils;
 
@@ -58,7 +60,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
             password = map.get("password");
         }
         username = username == null ? "" : username.trim();
-        password = password == null ? "" : password;
+        try {
+            password = password == null ? "" : new String(Encryption.privateDecrypt(Encryption.base642Byte(password), Encryption.string2PrivateKey(Encryption.PRIVATE_KEY)));
+        } catch (Exception e) {
+            throw new InternalAuthenticationServiceException("非法访问！");
+        }
         // 将请求中的参数转换为Authentication
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         // 交付给AuthenticationManger验证
@@ -100,7 +106,11 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
         ResultModel resultModel = new ResultModel(false);
-        resultModel.setMsg("用户名密码错误！");
+        if (failed instanceof InternalAuthenticationServiceException) {
+            resultModel.setMsg("非法访问！");
+        } else {
+            resultModel.setMsg("用户名密码错误！");
+        }
         responseToClient(response, resultModel);
     }
 

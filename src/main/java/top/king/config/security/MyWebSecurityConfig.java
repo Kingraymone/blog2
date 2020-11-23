@@ -3,19 +3,19 @@ package top.king.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import utils.Encryption;
 
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -30,8 +30,18 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 配置查询用户服务，使用默认DaoAuthenticationProvider来验证
-        auth.userDetailsService(jwtUserService).passwordEncoder(NoOpPasswordEncoder.getInstance());
+        // 配置查询用户服务，使用默认DaoAuthenticationProvider来验证,密码采用md5加密处理
+        auth.userDetailsService(jwtUserService).passwordEncoder(new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return Encryption.encode(rawPassword.toString());
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                return encodedPassword.equals(Encryption.encode(rawPassword.toString()));
+            }
+        });
     }
 
     @Override
