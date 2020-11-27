@@ -15,7 +15,7 @@ public class ResultModel<T> implements Serializable {
      */
     public static String ERROR = "1";
     private String code = "";
-    private boolean result = true;
+    private Boolean result = true;
     private String msg = "操作成功！";
     private T data;
     private Long count = -1L;

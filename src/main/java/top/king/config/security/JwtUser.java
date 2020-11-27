@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 public class JwtUser extends User {
-    private top.king.entity.User user;
+    private top.king.entity.authority.User user;
 
     public JwtUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
@@ -16,11 +16,11 @@ public class JwtUser extends User {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
-    public top.king.entity.User getUser() {
+    public top.king.entity.authority.User getUser() {
         return user;
     }
 
-    public void setUser(top.king.entity.User user) {
+    public void setUser(top.king.entity.authority.User user) {
         this.user = user;
     }
 }

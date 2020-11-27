@@ -7,7 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import top.king.config.security.JwtUser;
-import top.king.entity.User;
+import top.king.entity.authority.User;
 
 import java.time.Instant;
 import java.util.HashMap;

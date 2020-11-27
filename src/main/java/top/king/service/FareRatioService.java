@@ -2,7 +2,7 @@ package top.king.service;
 
 import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
-import top.king.entity.FareRatio;
+import top.king.entity.finance.FareRatio;
 import top.king.entity.dto.FareRatioDTO;
 
 import java.util.List;

@@ -10,6 +10,12 @@ import top.king.common.ResultModel;
 public class CommonAdviceController {
 
 
+    /**
+     * 全局异常处理
+     * @param ex
+     * @return top.king.common.ResultModel
+     * @date 2020/11/24
+     */
     @ExceptionHandler({Exception.class})
     @ResponseBody
     public ResultModel commonExceptionHandle(Exception ex) {

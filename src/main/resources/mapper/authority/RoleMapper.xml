@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.authority.RoleMapper">
+    <resultMap id="BaseResultMap" type="top.king.entity.authority.Role">
+        <id property="roleId" column="role_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="rolename" column="rolename" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="roleCode" column="role_code" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="top.king.entity.authority.Role">
+        insert into t_role (role_id, rolename, statement,
+                            status, role_code)
+        values (#{roleId,jdbcType=INTEGER}, #{rolename,jdbcType=VARCHAR}, #{statement,jdbcType=VARCHAR},
+                #{status,jdbcType=CHAR}, #{roleCode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="top.king.entity.authority.Role">
+        insert into t_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="rolename != null">
+                rolename,
+            </if>
+            <if test="statement != null">
+                statement,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="roleCode != null">
+                role_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                #{roleId,jdbcType=INTEGER},
+            </if>
+            <if test="rolename != null">
+                #{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="statement != null">
+                #{statement,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="roleCode != null">
+                #{roleCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateRole" parameterType="top.king.entity.authority.Role">
+        update t_role
+        <set>
+            <if test="rolename != null">
+                rolename=#{rolename,jdbcType=VARCHAR},
+            </if>
+            <if test="statement != null">
+                statement=#{statement,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status=#{status,jdbcType=CHAR},
+            </if>
+            <if test="roleCode != null">
+                role_code =#{roleCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+        role_id = #{roleId}
+    </update>
+
+
+    <delete id="deleteRole" parameterType="java.util.List">
+        delete
+        from t_role
+        where role_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--从用户权限表中查询出用户拥有的权限列表-->
+    <select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
+        select role_code
+        from t_role t
+        where t.role_id in (
+            select role_id
+            from t_user_role
+            where user_id = #{id}
+        )
+    </select>
+    <select id="queryRoles" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select *
+        from t_role t
+        <where>
+            <if test='data!=null and data.roleCode!=null and data.roleCode!=""'>
+                and t.role_code like concat('%',#{data.roleCode},'%')
+            </if>
+            <if test='data!=null and data.status!=null and data.status.size()>0'>
+                and t.status in
+                <foreach item="item" collection="data.status" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="queryAuthority" resultType="java.util.Map">
+        select a.resource_name as resourceName,a.`resource_code` as resourceCode,a.`resource_category` as resourceCategory,cast(b.`parent_id` as char) as parentId,
+               cast(b.`id` as char) as menuId,cast(b.`layer` as char) as layer,CAST(b.`order_num` AS CHAR) AS orderNum
+        from t_resources a ,t_menu b
+        where a.`resource_category`=b.`title`
+        order by orderNum asc
+    </select>
+
+    <select id="queryAuthorityCode" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT a.`resource_code` AS resourceCode
+        FROM t_resources a ,t_role_resources b
+        WHERE
+            a.`id` = b.`resources_id`
+          AND b.`role_id` = #{id}
+    </select>
+
+    <insert id="insertAuthority" parameterType="top.king.entity.dto.AuthorityDTO">
+        insert into t_role_resources(role_id,resources_id) values
+        <foreach collection="resources" item="item" open=" " separator="," close=" ">
+            (#{role},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAuthority">
+        delete from t_role_resources
+        where role_id = #{role_id}
+    </delete>
+</mapper>

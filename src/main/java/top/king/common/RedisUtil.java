@@ -7,6 +7,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 
 public class RedisUtil implements InitializingBean {
+    // namespace
+    public final static String SYS_MENU = "blog:menu";
+
     private static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
     private RedisTemplate<String, Object> redisTemplate;
 

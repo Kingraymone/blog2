@@ -2,11 +2,10 @@ package top.king.service;
 
 import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
-import top.king.entity.FundInfo;
-import top.king.entity.NetValue;
-import top.king.entity.ShareDetail;
+import top.king.entity.finance.FundInfo;
+import top.king.entity.finance.NetValue;
+import top.king.entity.finance.ShareDetail;
 
-import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Map;
 

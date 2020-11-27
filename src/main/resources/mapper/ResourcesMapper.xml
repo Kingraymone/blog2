@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.ResourcesMapper">
+    <resultMap id="BaseResultMap" type="top.king.entity.Resources">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="resourceName" column="resource_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="resourceCode" column="resource_code" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="resourceCategory" column="resource_category" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="top.king.entity.Resources">
+        insert into t_resources (id, resource_name, resource_code,
+                                 resource_category)
+        values (#{id,jdbcType=INTEGER}, #{resourceName,jdbcType=VARCHAR}, #{resourceCode,jdbcType=VARCHAR},
+                #{resourceCategory,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="top.king.entity.Resources">
+        insert into t_resources
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="resourceName != null">
+                resource_name,
+            </if>
+            <if test="resourceCode != null">
+                resource_code,
+            </if>
+            <if test="resourceCategory != null">
+                resource_category,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="resourceName != null">
+                #{resourceName,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceCode != null">
+                #{resourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceCategory != null">
+                #{resourceCategory,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateResources" parameterType="top.king.entity.Resources">
+        update t_resources
+        <set>
+            <if test="resourceName != null">
+                resource_name =#{resourceName,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceCode != null">
+                resource_code =#{resourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="resourceCategory != null">
+                resource_category=#{resourceCategory,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+        id = #{id}
+    </update>
+    <delete id="deleteResources" parameterType="java.util.List">
+        delete
+        from t_resources
+        where id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <select id="queryResources" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select *
+        from t_resources t
+        <where>
+            <if test='data!=null and data.resourceName!=null and data.resourceName!=""'>
+                and t.resource_name like concat('%',#{data.resourceName},'%')
+            </if>
+            <if test='data!=null and data.resourceCode!=null and data.resourceCode!=""'>
+                and t.resource_code like concat('%',#{data.resourceCode},'%')
+            </if>
+            <if test='data!=null and data.resourceCategory!=null and data.resourceCategory!=""'>
+                and t.resource_category like concat('%',#{data.resourceCategory},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectAllByResourceCode" parameterType="java.util.List" resultType="java.lang.Integer">
+        select id
+        from t_resources
+        where resource_code in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.authority.UserMapper">
+    <resultMap id="BaseResultMap" type="top.king.entity.authority.User">
+        <result column="user_id" jdbcType="INTEGER" property="uniqueId"/>
+        <result column="create_time" jdbcType="INTEGER" property="createTime"/>
+    </resultMap>
+    <select id="selectUsers" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
+        select
+               user_id,
+               username,
+               nickname,
+               avatar,
+               motto,
+               DATE_FORMAT(t.create_time,'%Y%m%d') create_time,
+               mail,
+               status
+        from t_user t
+        <where>
+            <if test='data.username!=null and data.username!=""'>
+                and t.username=#{data.username}
+            </if>
+            <if test='data.status!=null and data.status.size()>0'>
+                and t.status in
+                <foreach item="item" collection="data.status" open="(" separator=" , " close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test='data.createTime!=null'>
+                and DATE_FORMAT(t.create_time,'%Y%m%d')=#{data.createTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="verifyUser" parameterType="top.king.entity.authority.User" resultMap="BaseResultMap">
+        select
+               user_id,
+               username,
+               password,
+               nickname,
+               avatar,
+               motto,
+               DATE_FORMAT(t.create_time,'%Y%m%d'),
+               mail,
+               status
+        from t_user t
+        where username = #{username}
+          and password = #{password}
+    </select>
+
+    <select id="loadUserInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            user_id,
+            username,
+            password,
+            nickname,
+            avatar,
+            motto,
+            DATE_FORMAT(t.create_time,'%Y%m%d'),
+            mail,
+            status
+        from t_user t
+        where username = #{username}
+    </select>
+
+    <delete id="deleteUser" parameterType="java.util.List">
+        delete
+        from t_user
+        where user_id in
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <insert id="insertUser" parameterType="top.king.entity.authority.User">
+        insert into t_user(username, password, nickname, avatar, motto, create_time, mail, status)
+        values (#{username},
+                #{password},
+                #{nickname},
+                #{avatar},
+                #{motto},
+                sysdate(),
+                #{mail},
+                #{status})
+    </insert>
+    <update id="updateUser" parameterType="top.king.entity.authority.User">
+        update t_user
+        <set>
+            username = #{username},
+            password = #{password},
+            <if test='nickname!=null'>
+                nickname = #{nickname},
+            </if>
+            <if test='avatar!=null'>
+                avatar = #{avatar},
+            </if>
+            <if test='motto!=null'>
+                motto = #{motto},
+            </if>
+            <if test='mail!=null'>
+                mail = #{mail},
+            </if>
+            <if test='status!=null'>
+                status = #{status},
+            </if>
+        </set>
+        where
+        user_id = #{uniqueId}
+    </update>
+    <update id="updateAvatar" parameterType="java.util.Map">
+        update t_user
+        set avatar = #{avatar}
+        where username = #{username}
+    </update>
+</mapper>

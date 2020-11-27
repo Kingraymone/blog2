@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import top.king.entity.User;
-import top.king.mapper.RoleMapper;
-import top.king.service.UserService;
+import top.king.entity.authority.User;
+import top.king.mapper.authority.RoleMapper;
+import top.king.service.authority.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -7,10 +7,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import utils.Convert;
@@ -44,7 +42,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         // 如果不存在令牌则跳过当前过滤器
         if (ObjectUtils.isEmpty(token)) {
             filterChain.doFilter(request, response);
-        }else{
+        } else {
             SecurityContextHolder.getContext().setAuthentication(token);
             filterChain.doFilter(request, response);
         }

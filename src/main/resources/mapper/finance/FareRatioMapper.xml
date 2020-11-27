@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.king.mapper.finance.FareRatioMapper">
+  <resultMap id="BaseResultMap" type="top.king.entity.finance.FareRatio">
+      <result property="uniqueId" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="businessType" column="business_type" javaType="java.lang.String" jdbcType="CHAR" />
+      <result property="minBalance" column="min_balance" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="maxBalance" column="max_balance" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="minHoldday" column="min_holdday" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result property="maxHoldday" column="max_holdday" javaType="java.lang.Integer" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="selectFareRatios" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
+    select
+    id, fundcode, business_type,
+    min_balance, max_balance, min_holdday,
+    max_holdday, ratio
+    from t_fareratio t
+    <where>
+      <if test='data.fundcode!=null and data.fundcode!=""'>
+        and t.fundcode like CONCAT('%', #{data.fundcode}, '%')
+      </if>
+      <if test='data.businessType!=null and data.businessType.size()>0'>
+        and t.business_type in
+        <foreach item="item" collection="data.businessType" open="(" separator=" , " close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
+    order by fundcode desc
+  </select>
+    <select id="selectFareRatioByPM" parameterType="java.util.Map" resultType="top.king.entity.finance.FareRatio">
+      select
+    id, fundcode, business_type,
+    min_balance, max_balance, min_holdday,
+    max_holdday, ratio
+    from t_fareratio t
+    where fundcode=#{fundcode}
+    <if test='balance!=null'>
+      and (#{balance}<![CDATA[ >= ]]>min_balance and #{balance}<![CDATA[ < ]]>max_balance)
+    </if>
+    <if test="holdday!=null">
+      and (#{holdday}<![CDATA[ >= ]]>min_holdday and #{holdday}<![CDATA[ < ]]>max_holdday)
+    </if>
+    </select>
+    <insert id="insert" parameterType="top.king.entity.finance.FareRatio">
+    insert into t_fareratio (id, fundcode, business_type, 
+      min_balance, max_balance, min_holdday, 
+      max_holdday, ratio)
+    values (#{uniqueId,jdbcType=INTEGER}, #{fundcode,jdbcType=VARCHAR}, #{businessType,jdbcType=CHAR},
+      #{minBalance,jdbcType=INTEGER}, #{maxBalance,jdbcType=INTEGER}, #{minHoldday,jdbcType=INTEGER}, 
+      #{maxHoldday,jdbcType=INTEGER}, #{ratio,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="top.king.entity.finance.FareRatio">
+    insert into t_fareratio
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uniqueId != null">
+        id,
+      </if>
+      <if test="fundcode != null">
+        fundcode,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="minBalance != null">
+        min_balance,
+      </if>
+      <if test="maxBalance != null">
+        max_balance,
+      </if>
+      <if test="minHoldday != null">
+        min_holdday,
+      </if>
+      <if test="maxHoldday != null">
+        max_holdday,
+      </if>
+      <if test="ratio != null">
+        ratio,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uniqueId != null">
+        #{uniqueId,jdbcType=INTEGER},
+      </if>
+      <if test="fundcode != null">
+        #{fundcode,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=CHAR},
+      </if>
+      <if test="minBalance != null">
+        #{minBalance,jdbcType=INTEGER},
+      </if>
+      <if test="maxBalance != null">
+        #{maxBalance,jdbcType=INTEGER},
+      </if>
+      <if test="minHoldday != null">
+        #{minHoldday,jdbcType=INTEGER},
+      </if>
+      <if test="maxHoldday != null">
+        #{maxHoldday,jdbcType=INTEGER},
+      </if>
+      <if test="ratio != null">
+        #{ratio,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateFareRatio" parameterType="top.king.entity.finance.FareRatio">
+    update t_fareratio
+    <set>
+      <if test="fundcode != null">
+        fundcode = #{fundcode},
+      </if>
+      <if test="businessType != null">
+        business_type = #{businessType},
+      </if>
+      <if test="minBalance != null">
+        min_balance = #{minBalance},
+      </if>
+      <if test="maxBalance != null">
+        max_balance = #{maxBalance},
+      </if>
+      <if test="minHoldday != null">
+        min_holdday = #{minHoldday},
+      </if>
+      <if test="maxHoldday != null">
+        max_holdday = #{maxHoldday},
+      </if>
+      <if test="ratio != null">
+        ratio = #{ratio},
+      </if>
+    </set>
+    where
+    id = #{uniqueId}
+  </update>
+  <delete id="deleteFareRatio" parameterType="java.lang.String">
+    delete t
+    from t_fareratio t
+    where t.id in
+    <foreach item="item" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+</mapper>

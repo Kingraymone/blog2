@@ -2,7 +2,7 @@ package top.king.service;
 
 import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
-import top.king.entity.Article;
+import top.king.entity.blog.Article;
 import top.king.entity.dto.ArticleSearchDTO;
 
 import java.util.List;
