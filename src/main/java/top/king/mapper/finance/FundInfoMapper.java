@@ -17,5 +17,7 @@ public interface FundInfoMapper {
 
     void deleteFundByFundCode(FundInfo fundInfo);
 
+    void updateFundInfo(FundInfo fundInfo);
+
     List<Map> selectFundDict();
 }

@@ -12,6 +12,8 @@ import java.util.Map;
 public interface FinanceService {
     ResultModel addFund(String fundcode);
 
+    ResultModel editFund(FundInfo fundInfo);
+
     ResultModel<List<FundInfo>> selectFundInfo(BaseQuery<FundInfo> param);
 
     ResultModel deleteFundInfos(List<String> primaryKey);
@@ -55,7 +57,7 @@ public interface FinanceService {
      */
     ResultModel<Map> calculateProfit(String fundcode);
 
-    ResultModel<List<ShareDetail>> selectShareDetails(String fundcode);
+    ResultModel<List<ShareDetail>> selectShareDetails(String fundcode,String type);
 
     /**
      * 基金模拟买入实现  展示要点：持有天数，收益，收益率

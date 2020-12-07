@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +19,7 @@ public class Http {
 
     public static StringBuffer doGetBuffer(String url, Map<String, String> headers) {
         HttpURLConnection http = null;
+        BufferedReader reader =null;
         try {
             /*获得HTTP*/
             URL getUrl = new URL(url);
@@ -41,10 +43,11 @@ public class Http {
             }
             // 连接，握手
             http.connect();
-            /*获得响应结果*/
+            // 获得响应结果
             int code = http.getResponseCode();
             StringBuffer result = new StringBuffer();
-            if (code == 200) { // 正常响应
+            // 正常响应
+            if (code == 200) {
                 // 获得响应文本内容编码
                 String headerField = http.getHeaderField("Content-Type");
                 String charSet = "utf-8";
@@ -53,18 +56,25 @@ public class Http {
                     charSet = headerField.substring(pos + 8);
                 }
                 // 从流中读取响应信息
-                BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), charSet));
+                reader = new BufferedReader(new InputStreamReader(http.getInputStream(), charSet));
                 String line = null;
-                while ((line = reader.readLine()) != null) { // 循环从流中读取
+                // 循环从流中读取
+                while ((line = reader.readLine()) != null) {
                     result.append(line).append("\n");
                 }
-                reader.close(); // 关闭流
             }
             return result;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
+            if(reader!=null){
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (http != null) {
                 http.disconnect();
             }

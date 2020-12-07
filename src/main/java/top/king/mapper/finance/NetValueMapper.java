@@ -13,6 +13,8 @@ public interface NetValueMapper {
 
     void deleteNetValues(NetValue newValue);
 
+    void deleteNetValuesByFundcode(List<String> primaryKey);
+
     List<NetValue> selectNetValue(String fundcode);
 
     List<NetValue> selectByNetvalue(NetValue newValue);

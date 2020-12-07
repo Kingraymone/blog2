@@ -104,4 +104,11 @@
             </if>
         </where>
     </delete>
+    <delete id="deleteNetValuesByFundcode" parameterType="java.util.List">
+        delete from t_netvalue
+        where fundcode in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

@@ -137,7 +137,61 @@
       </if>
     </trim>
   </insert>
-  <select id="selectFundInfo" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
+  <update id="updateFundInfo" parameterType="top.king.entity.finance.FundInfo">
+    update t_fundinfo
+    <set>
+      <if test="fundname != null">
+        fundname=#{fundname,jdbcType=VARCHAR},
+      </if>
+      <if test="fundcode != null">
+        fundcode=#{fundcode,jdbcType=VARCHAR},
+      </if>
+      <if test="investRange != null">
+        invest_range=#{investRange,jdbcType=VARCHAR},
+      </if>
+      <if test="setupDate != null">
+        setup_date=#{setupDate,jdbcType=INTEGER},
+      </if>
+      <if test="director != null">
+        director=#{director,jdbcType=VARCHAR},
+      </if>
+      <if test="fundType != null">
+        fund_type=#{fundType,jdbcType=VARCHAR},
+      </if>
+      <if test="manger != null">
+        manger=#{manger,jdbcType=VARCHAR},
+      </if>
+      <if test="asset != null">
+        asset=#{asset,jdbcType=VARCHAR},
+      </if>
+      <if test="purchase != null">
+        purchase= #{purchase,jdbcType=VARCHAR},
+      </if>
+      <if test="bDate != null">
+        b_date=#{bDate,jdbcType=VARCHAR},
+      </if>
+      <if test="sDate != null">
+        s_date=#{sDate,jdbcType=VARCHAR},
+      </if>
+      <if test="manageRatio != null">
+        manage_ratio=#{manageRatio,jdbcType=VARCHAR},
+      </if>
+      <if test="trusteeRatio != null">
+        trustee_ratio=#{trusteeRatio,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceRatio != null">
+        service_ratio= #{serviceRatio,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseFare != null">
+        purchase_fare= #{purchaseFare,jdbcType=VARCHAR},
+      </if>
+      <if test="redeemFare != null">
+        redeem_fare= #{redeemFare,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id=#{uniqueId}
+  </update>
+    <select id="selectFundInfo" parameterType="top.king.common.BaseQuery" resultMap="BaseResultMap">
     select
     *
     from t_fundinfo t
@@ -146,8 +200,8 @@
          t.fundcode like CONCAT('%', #{data.fundcode}, '%')
       </if>
     </where>
-    order by fundcode desc
-  </select>
+      ORDER BY invest_range DESC,purchase_fare ASC
+    </select>
 
   <delete id="deleteFunds" parameterType="java.lang.String">
     delete t

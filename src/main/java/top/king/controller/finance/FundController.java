@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.king.common.BaseQuery;
 import top.king.common.ResultModel;
-import top.king.entity.finance.FundInfo;
 import top.king.entity.dto.FundInfoDTO;
+import top.king.entity.finance.FundInfo;
 import top.king.service.FinanceService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class FundController {
     FinanceService financeService;
 
     @ModelAttribute("king")
-    public String test(){
+    public String test() {
         return "测试";
     }
 
@@ -29,6 +29,11 @@ public class FundController {
     @RequestMapping("/add")
     public ResultModel addFund(String fundcode) {
         return financeService.addFund(fundcode);
+    }
+
+    @RequestMapping("/edit")
+    public ResultModel addFund(@RequestBody FundInfo fundInfo) {
+        return financeService.editFund(fundInfo);
     }
 
     @RequestMapping("/search")

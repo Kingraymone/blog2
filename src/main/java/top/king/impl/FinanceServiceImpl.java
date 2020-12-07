@@ -60,6 +60,7 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
     public ResultModel deleteFundInfos(List<String> primaryKey) {
         ResultModel resultModel = new ResultModel();
         try {
+            netValueMapper.deleteNetValuesByFundcode(primaryKey);
             fundInfoMapper.deleteFunds(primaryKey);
             return resultModel;
         } catch (Exception e) {
@@ -82,6 +83,20 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
         } catch (Exception e) {
             bLogger.debug("查询基金信息出错！", e);
             resultModel.setMsg("查询基金信息出错！");
+            resultModel.setResult(false);
+            return resultModel;
+        }
+    }
+
+    @Override
+    public ResultModel editFund(FundInfo fundInfo) {
+        ResultModel resultModel = new ResultModel();
+        try {
+            fundInfoMapper.updateFundInfo(fundInfo);
+            return resultModel;
+        } catch (Exception e) {
+            bLogger.debug("修改基金信息出错！", e);
+            resultModel.setMsg("修改基金信息出错！");
             resultModel.setResult(false);
             return resultModel;
         }
@@ -430,12 +445,12 @@ public class FinanceServiceImpl extends BaseService implements FinanceService {
 
 
     @Override
-    public ResultModel<List<ShareDetail>> selectShareDetails(String fundcode) {
+    public ResultModel<List<ShareDetail>> selectShareDetails(String fundcode, String type) {
         ResultModel<List<ShareDetail>> resultModel = new ResultModel<>();
         try {
             ShareDetail shareDetail = new ShareDetail();
             shareDetail.setFundcode(fundcode);
-            shareDetail.setBusinessType("1");
+            shareDetail.setBusinessType(type);
             List<ShareDetail> shareDetails = shareDetailMapper.selectShareDetailByType(shareDetail);
             resultModel.setData(shareDetails);
             return resultModel;

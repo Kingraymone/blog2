@@ -49,8 +49,8 @@ public class NetValueController {
     }
 
     @RequestMapping("/detail")
-    public ResultModel<List<ShareDetail>> selectRedeemShareDeatil(String fundcode) {
-        return financeService.selectShareDetails(fundcode);
+    public ResultModel<List<ShareDetail>> selectRedeemShareDeatil(String fundcode,String type) {
+        return financeService.selectShareDetails(fundcode,type);
     }
 
 }
